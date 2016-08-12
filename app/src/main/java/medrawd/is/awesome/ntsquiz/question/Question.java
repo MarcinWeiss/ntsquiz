@@ -19,6 +19,7 @@ import medrawd.is.awesome.ntsquiz.legislation.Document;
 
 public class Question {
     public static final String TAG = Question.class.getSimpleName();
+    public static final String QUESTIONS_FILENAME = "pytania.tsv";
     public static List<Question> questions = new ArrayList<>();
     private static Pattern documentNamePattern = Pattern.compile("^(.+) \\-.*$");
     private static Pattern articleNamePattern = Pattern.compile("^.*Art\\. (\\d+\\w*).*$");
@@ -79,7 +80,8 @@ public class Question {
 
     public static List<Question> loadQuestions(Context context) throws IOException {
         Log.d(TAG, "loadQuestions");
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.questions));
+        questions.clear();
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(QUESTIONS_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         String line = reader.readLine();

@@ -2,26 +2,58 @@ package medrawd.is.awesome.ntsquiz;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+import medrawd.is.awesome.ntsquiz.storage.DataLoadingService;
+import medrawd.is.awesome.ntsquiz.storage.RemoteResourcesService;
+
+import static medrawd.is.awesome.ntsquiz.legislation.Document.KODEKS_KARNY_FILENAME;
+import static medrawd.is.awesome.ntsquiz.legislation.Document.ROZPORZADZENIE_EGZAMIN_FILENAME;
+import static medrawd.is.awesome.ntsquiz.legislation.Document.ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME;
+import static medrawd.is.awesome.ntsquiz.legislation.Document.ROZPORZĄDZENIE_NOSZENIE_FILENAME;
+import static medrawd.is.awesome.ntsquiz.legislation.Document.ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME;
+import static medrawd.is.awesome.ntsquiz.legislation.Document.USTAWA_O_BRONI_I_AMUNICJI_FILENAME;
+import static medrawd.is.awesome.ntsquiz.legislation.Document.WZORCOWY_REGULAMIN_STRZELNIC_FILENAME;
+import static medrawd.is.awesome.ntsquiz.question.Question.QUESTIONS_FILENAME;
 
 public class LoadingActivity extends AppCompatActivity {
+    public static final String ACTION_DOWNLOADING_UPDATE = "medrawd.is.awesome.ntsquiz.ACTION_DOWNLOADING_UPDATE";
+    public static final String ACTION_DOWNLOADING_FINISHED = "medrawd.is.awesome.ntsquiz.ACTION_DOWNLOADING_FINISHED";
+    public static final String ACTION_LOADING_UPDATE = "medrawd.is.awesome.ntsquiz.ACTION_LOADING_UPDATE";
+    public static final String ACTION_LOADING_FINISHED = "medrawd.is.awesome.ntsquiz.ACTION_LOADING_FINISHED";
+    public static final String ACTION_LOADING_FAILED = "medrawd.is.awesome.ntsquiz.ACTION_LOADING_FAILED";
+    public static final String EXTRA_STAGE = "medrawd.is.awesome.ntsquiz.EXTRA_STAGE";
+    public static final String EXTRA_FILENAME = "medrawd.is.awesome.ntsquiz.EXTRA_FILENAME";
 
     private static final String TAG = LoadingActivity.class.getSimpleName();
     private TextView loadingDetails;
     private BroadcastReceiver mReceiver;
     private boolean mReceiverRegistered;
+    private FirebaseAuth mAuth;
+    private String[] filenames = new String[]{USTAWA_O_BRONI_I_AMUNICJI_FILENAME,
+            ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME, ROZPORZADZENIE_EGZAMIN_FILENAME,
+            KODEKS_KARNY_FILENAME, ROZPORZĄDZENIE_NOSZENIE_FILENAME,
+            ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME, WZORCOWY_REGULAMIN_STRZELNIC_FILENAME,
+            QUESTIONS_FILENAME};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +70,28 @@ public class LoadingActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(NtsQuizApplication.ACTION_LOADING_UPDATE)) {
-                    String message = intent.getStringExtra(NtsQuizApplication.EXTRA_LOADING_STAGE);
+                if (intent.getAction().equals(ACTION_LOADING_UPDATE) ||
+                        intent.getAction().equals(ACTION_DOWNLOADING_UPDATE)) {
+                    String message = intent.getStringExtra(EXTRA_STAGE);
                     loadingDetails.setText(message);
-                } else if (intent.getAction().equals(NtsQuizApplication.ACTION_LOADING_FINISHED)) {
+                } else if (intent.getAction().equals(ACTION_DOWNLOADING_FINISHED)) {
+                    DataLoadingService.startActionLoadData(getApplicationContext());
+                } else if (intent.getAction().equals(ACTION_LOADING_FINISHED)) {
                     navigateToQuizActivity();
+                } else if (intent.getAction().equals(ACTION_LOADING_FAILED)) {
+                    String stringExtra = intent.getStringExtra(EXTRA_FILENAME);
+                    new AlertDialog.Builder(getApplicationContext())
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Nieudało się załadować " + stringExtra)
+                            .setMessage(String.format("Plik %s nie został poprawnie pobrany, sprawdź połączenie z internetem i spróbuj ponownie", stringExtra))
+                            .setPositiveButton("Rozumiem", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+
+                            })
+                            .show();
                 }
             }
         };
@@ -62,22 +111,34 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        NtsQuizApplication application = (NtsQuizApplication) getApplication();
-        if (application.isLoadingFinished()) {
-            navigateToQuizActivity();
-        } else {
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(NtsQuizApplication.ACTION_LOADING_FINISHED);
-            filter.addAction(NtsQuizApplication.ACTION_LOADING_UPDATE);
-            registerReceiver(mReceiver, filter);
-            mReceiverRegistered = true;
-            application.loadDataInBacground();
-        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_LOADING_FINISHED);
+        filter.addAction(ACTION_DOWNLOADING_FINISHED);
+        filter.addAction(ACTION_LOADING_UPDATE);
+        filter.addAction(ACTION_DOWNLOADING_UPDATE);
+        filter.addAction(ACTION_LOADING_FAILED);
+        registerReceiver(mReceiver, filter);
+        mReceiverRegistered = true;
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
+                        RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInAnonymously", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override
     protected void onPause() {
-        if(mReceiverRegistered) {
+        if (mReceiverRegistered) {
             unregisterReceiver(mReceiver);
         }
         super.onPause();

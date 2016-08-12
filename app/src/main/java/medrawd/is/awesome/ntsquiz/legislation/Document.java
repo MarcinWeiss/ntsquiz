@@ -1,7 +1,6 @@
 package medrawd.is.awesome.ntsquiz.legislation;
 
 import android.content.Context;
-import android.text.Html;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -15,9 +14,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import medrawd.is.awesome.ntsquiz.R;
-
 public class Document {
+    public static final String USTAWA_O_BRONI_I_AMUNICJI_FILENAME = "Ustawa o Broni i Amunicji.txt";
+    public static final String KODEKS_KARNY_FILENAME = "Kodeks Karny.txt";
+    public static final String WZORCOWY_REGULAMIN_STRZELNIC_FILENAME = "Wzorcowy regulamin strzelnic.txt";
+    public static final String ROZPORZADZENIE_EGZAMIN_FILENAME = "Rozporządzenie w sprawie egzaminu.txt";
+    public static final String ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME = "Rozporządzenie w sprawie przewożenia broni i amunicji.txt";
+    public static final String ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME = "Rozporządzenie w sprawie deponowania broni.txt";
+    public static final String ROZPORZĄDZENIE_NOSZENIE_FILENAME = "Rozporządzenie w sprawie przechowywania i noszenia broni.txt";
     public static Map<String, Document> documents = new HashMap<>();
 
     private static final String TAG = Document.class.getSimpleName();
@@ -131,7 +135,7 @@ public class Document {
     }
 
     public static Document loadUoBiA(Context context) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.uobia));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(USTAWA_O_BRONI_I_AMUNICJI_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         Document uoiba = new Document("UoBiA");
@@ -152,7 +156,7 @@ public class Document {
     }
 
     public static Document loadKodeksKarny(Context context) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.kk));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(KODEKS_KARNY_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         Document kodeksKarny = new Document("KK");
@@ -173,7 +177,7 @@ public class Document {
     }
 
     public static Document loadRegulaminStrzelnic(Context context) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.regulamin_strzelnic));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(WZORCOWY_REGULAMIN_STRZELNIC_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         Document kodeksKarny = new Document("Wzorcowy regulamin strzelnic");
@@ -194,7 +198,7 @@ public class Document {
     }
 
     public static Document loadRozporzadzenieWsPrzewozenia(Context context) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.przewozenie));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         Document rozporzadzenie = new Document("Rozporządzenie w sprawie przewożenia broni i amunicji środkami transportu publicznego");
@@ -215,7 +219,7 @@ public class Document {
     }
 
     public static Document loadRozporzadzenieWsDeponowania(Context context) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.deponowanie));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         Document rozporzadzenie = new Document("Rozporządzenie w sprawie deponowania broni");
@@ -236,7 +240,7 @@ public class Document {
     }
 
     public static Document loadRozporzadzenieWsNoszeniaIprzechowywania(Context context) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.noszenie));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(ROZPORZĄDZENIE_NOSZENIE_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         Document rozporzadzenie = new Document("Rozporządzenie w sprawie noszenia i przechowywania broni");
@@ -257,7 +261,7 @@ public class Document {
     }
 
     public static Document loadRozporzadzenieWsEgzaminu(Context context) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.egzamin));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(ROZPORZADZENIE_EGZAMIN_FILENAME));
         BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
 
         Document rozporzadzenie = new Document("Rozporządzenie w sprawie egzaminu");
@@ -322,4 +326,5 @@ public class Document {
         }
         return article;
     }
+
 }
