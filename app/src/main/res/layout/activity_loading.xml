@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="medrawd.is.awesome.ntsquiz.LoadingActivity">
+
+    <ImageView
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        android:layout_marginTop="100dp"
+        app:srcCompat="@drawable/ic_nts_logo"
+        android:id="@+id/logo_coin"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo_coin"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/loading_details"
+        android:layout_marginTop="48dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginLeft="48dp"
+        tools:text="ładuję Rozporządzenie w sprawie szczegółowych zasad deponowania i niszczenia broni i amunicji w depozycie Policji, Żandarmerii Wojskowej lub organu celnego oraz stawki odpłatności za ich przechowywanie w depozycie"/>
+</RelativeLayout>

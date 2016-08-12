@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Pytania">
+        <menu>
+            <item
+                android:id="@+id/nav_pytania"
+                android:title="Wszystkie pytania" />
+            <item
+                android:id="@+id/nav_quiz"
+                android:title="Quiz" />
+        </menu>
+    </item>
+
+    <item android:title="Przepisy">
+        <menu>
+            <item
+                android:id="@+id/nav_uobia"
+                android:title="UoBiA" />
+            <item
+                android:id="@+id/nav_kk"
+                android:title="Kodeks Karny" />
+            <item
+                android:id="@+id/nav_regulamin_strzelnic"
+                android:title="Wzorcowy regulamin strzelnic" />
+            <item
+                android:id="@+id/nav_rozporzadzenie_przewozenie"
+                android:title="Przewożenia broni i amunicji" />
+            <item
+                android:id="@+id/nav_rozporzadzenie_deponowanie"
+                android:title="Deponowanie broni" />
+            <item
+                android:id="@+id/nav_rozporzadzenie_noszenie"
+                android:title="Noszenie i przechowywanie broni" />
+            <item
+                android:id="@+id/nav_rozporzadzenie_egzamin"
+                android:title="Egzamin" />
+        </menu>
+    </item>
+</menu>
