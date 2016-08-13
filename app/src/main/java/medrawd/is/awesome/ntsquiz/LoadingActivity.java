@@ -2,26 +2,30 @@ package medrawd.is.awesome.ntsquiz;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Date;
 
 import medrawd.is.awesome.ntsquiz.storage.DataLoadingService;
 import medrawd.is.awesome.ntsquiz.storage.RemoteResourcesService;
@@ -45,6 +49,9 @@ public class LoadingActivity extends AppCompatActivity {
     public static final String EXTRA_FILENAME = "medrawd.is.awesome.ntsquiz.EXTRA_FILENAME";
 
     private static final String TAG = LoadingActivity.class.getSimpleName();
+    public static final String UPDATE_PREFS = "updatePrefs";
+    public static final String LAST_UPDATE = "lastUpdate";
+    public static final int MILIS_IN_DAY = 86400000;
     private TextView loadingDetails;
     private BroadcastReceiver mReceiver;
     private boolean mReceiverRegistered;
@@ -73,25 +80,37 @@ public class LoadingActivity extends AppCompatActivity {
                 if (intent.getAction().equals(ACTION_LOADING_UPDATE) ||
                         intent.getAction().equals(ACTION_DOWNLOADING_UPDATE)) {
                     String message = intent.getStringExtra(EXTRA_STAGE);
+                    Log.d(TAG, "action state update " + message);
                     loadingDetails.setText(message);
                 } else if (intent.getAction().equals(ACTION_DOWNLOADING_FINISHED)) {
+                    Log.d(TAG, "action downloading finished");
+                    updateLastUpdateTime();
                     DataLoadingService.startActionLoadData(getApplicationContext());
                 } else if (intent.getAction().equals(ACTION_LOADING_FINISHED)) {
+                    Log.d(TAG, "action loading finished");
+                    ((NtsQuizApplication) getApplication()).setQuestionsLoaded(true);
                     navigateToQuizActivity();
                 } else if (intent.getAction().equals(ACTION_LOADING_FAILED)) {
+                    Log.d(TAG, "action loading failed");
                     String stringExtra = intent.getStringExtra(EXTRA_FILENAME);
-                    new AlertDialog.Builder(getApplicationContext())
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle("Nieudało się załadować " + stringExtra)
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+                    alertDialogBuilder.setTitle(String.format("Nieudało się załadować %s", stringExtra));
+                    alertDialogBuilder
                             .setMessage(String.format("Plik %s nie został poprawnie pobrany, sprawdź połączenie z internetem i spróbuj ponownie", stringExtra))
-                            .setPositiveButton("Rozumiem", new DialogInterface.OnClickListener() {
+                            .setCancelable(false)
+                            .setPositiveButton("zamknij", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
                                     finish();
                                 }
+                            });
 
-                            })
-                            .show();
+                    // create alert dialog
+                    android.app.AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    // show it
+                    alertDialog.show();
                 }
             }
         };
@@ -111,29 +130,37 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_LOADING_FINISHED);
-        filter.addAction(ACTION_DOWNLOADING_FINISHED);
-        filter.addAction(ACTION_LOADING_UPDATE);
-        filter.addAction(ACTION_DOWNLOADING_UPDATE);
-        filter.addAction(ACTION_LOADING_FAILED);
-        registerReceiver(mReceiver, filter);
-        mReceiverRegistered = true;
+        if (!((NtsQuizApplication) getApplication()).areQuestionsLoaded()) {
+            Log.d(TAG, "last update " + String.valueOf(getLastUpdateTime()));
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ACTION_LOADING_FINISHED);
+            filter.addAction(ACTION_DOWNLOADING_FINISHED);
+            filter.addAction(ACTION_LOADING_UPDATE);
+            filter.addAction(ACTION_DOWNLOADING_UPDATE);
+            filter.addAction(ACTION_LOADING_FAILED);
+            registerReceiver(mReceiver, filter);
+            mReceiverRegistered = true;
 
-        mAuth = FirebaseAuth.getInstance();
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
-                        RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInAnonymously", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+            if (getLastUpdateTime() + MILIS_IN_DAY < new Date().getTime()) {
+                mAuth = FirebaseAuth.getInstance();
+                mAuth.signInAnonymously()
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
+                                if (task.isSuccessful()) {
+                                    RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
+                                } else {
+                                    DataLoadingService.startActionLoadData(getApplicationContext());
+                                }
+                            }
+                        });
+            } else {
+                DataLoadingService.startActionLoadData(getApplicationContext());
+            }
+        } else {
+            navigateToQuizActivity();
+        }
     }
 
     @Override
@@ -147,5 +174,16 @@ public class LoadingActivity extends AppCompatActivity {
     private void navigateToQuizActivity() {
         Intent intent = new Intent(this, QuizActivity.class);
         startActivity(intent);
+    }
+
+    private long getLastUpdateTime() {
+        SharedPreferences prefs = getSharedPreferences(UPDATE_PREFS, MODE_PRIVATE);
+        return prefs.getLong(LAST_UPDATE, 0L);
+    }
+
+    private void updateLastUpdateTime() {
+        SharedPreferences.Editor editor = getSharedPreferences(UPDATE_PREFS, MODE_PRIVATE).edit();
+        editor.putLong(LAST_UPDATE, new Date().getTime());
+        editor.commit();
     }
 }

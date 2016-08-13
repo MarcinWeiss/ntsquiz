@@ -88,6 +88,9 @@ public class RemoteResourcesService extends IntentService {
                     downloadNext();
                 }
             });
+        } else {
+            filesNames.remove(0);
+            downloadNext();
         }
     }
 

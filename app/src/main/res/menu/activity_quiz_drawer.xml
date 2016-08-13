@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Pytania">
+    <item android:title="@string/questions_group">
         <menu>
             <item
-                android:id="@+id/nav_pytania"
-                android:title="Wszystkie pytania" />
+                android:id="@+id/nav_questions"
+                android:title="@string/all_questions" />
+            <item
+                android:id="@+id/nav_random_questions"
+                android:title="@string/random_questions" />
             <item
                 android:id="@+id/nav_quiz"
-                android:title="Quiz" />
+                android:title="@string/quiz" />
         </menu>
     </item>
 
-    <item android:title="Przepisy">
+    <item android:title="@string/legislation_group">
         <menu>
             <item
                 android:id="@+id/nav_uobia"
-                android:title="UoBiA" />
+                android:title="@string/uobia" />
             <item
                 android:id="@+id/nav_kk"
-                android:title="Kodeks Karny" />
+                android:title="@string/kodeks_karny" />
             <item
                 android:id="@+id/nav_regulamin_strzelnic"
-                android:title="Wzorcowy regulamin strzelnic" />
+                android:title="@string/wzorcowy_regulamin_strzelnic" />
             <item
                 android:id="@+id/nav_rozporzadzenie_przewozenie"
-                android:title="Przewożenia broni i amunicji" />
+                android:title="@string/przewo_enia_broni_i_amunicji" />
             <item
                 android:id="@+id/nav_rozporzadzenie_deponowanie"
-                android:title="Deponowanie broni" />
+                android:title="@string/deponowanie_broni" />
             <item
                 android:id="@+id/nav_rozporzadzenie_noszenie"
-                android:title="Noszenie i przechowywanie broni" />
+                android:title="@string/noszenie_i_przechowywanie_broni" />
             <item
                 android:id="@+id/nav_rozporzadzenie_egzamin"
-                android:title="Egzamin" />
+                android:title="@string/egzamin" />
         </menu>
     </item>
 </menu>

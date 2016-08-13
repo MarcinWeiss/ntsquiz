@@ -56,6 +56,7 @@ public class DataLoadingService extends IntentService {
             Log.i(TAG, uoiba.getParagraph());
         } catch (IOException e) {
             broadcastLoadingFailed(USTAWA_O_BRONI_I_AMUNICJI_FILENAME);
+            return;
         }
         try {
             broadcastLoadingUpdate("ładuję Kodeks Karny");
@@ -63,6 +64,7 @@ public class DataLoadingService extends IntentService {
             Log.i(TAG, kk.getParagraph());
         } catch (IOException e) {
             broadcastLoadingFailed(KODEKS_KARNY_FILENAME);
+            return;
         }
         try {
             broadcastLoadingUpdate("ładuję Wzorcowy regulamin strzelnic");
@@ -70,6 +72,7 @@ public class DataLoadingService extends IntentService {
             Log.i(TAG, regulamin.getParagraph());
         } catch (IOException e) {
             broadcastLoadingFailed(WZORCOWY_REGULAMIN_STRZELNIC_FILENAME);
+            return;
         }
         try {
             broadcastLoadingUpdate("ładuję Rozporządzenie w sprawie przewożenia broni i amunicji środkami transportu publicznego");
@@ -77,6 +80,7 @@ public class DataLoadingService extends IntentService {
             Log.i(TAG, rozporzadzenie.getParagraph());
         } catch (IOException e) {
             broadcastLoadingFailed(ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME);
+            return;
         }
         try {
             broadcastLoadingUpdate("ładuję Rozporządzenie w sprawie szczegółowych zasad deponowania i niszczenia broni i amunicji w depozycie Policji, Żandarmerii Wojskowej lub organu celnego oraz stawki odpłatności za ich przechowywanie w depozycie ");
@@ -84,6 +88,7 @@ public class DataLoadingService extends IntentService {
             Log.i(TAG, rozporzadzenie.getParagraph());
         } catch (IOException e) {
             broadcastLoadingFailed(ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME);
+            return;
         }
         try {
             broadcastLoadingUpdate("ładuję Rozporządzenie w sprawie przechowywania, noszenia oraz ewidencjonowania broni i amunicji");
@@ -91,6 +96,7 @@ public class DataLoadingService extends IntentService {
             Log.i(TAG, rozporzadzenie.getParagraph());
         } catch (IOException e) {
             broadcastLoadingFailed(ROZPORZĄDZENIE_NOSZENIE_FILENAME);
+            return;
         }
         try {
             broadcastLoadingUpdate("ładuję Rozporządzenie w sprawie egzaminu ze znajomości przepisów dotyczących posiadania broni oraz umiejętności posługiwania się bronią");
@@ -98,12 +104,14 @@ public class DataLoadingService extends IntentService {
             Log.i(TAG, rozporzadzenie.getParagraph());
         } catch (IOException e) {
             broadcastLoadingFailed(ROZPORZADZENIE_EGZAMIN_FILENAME);
+            return;
         }
         try {
             broadcastLoadingUpdate("ładuję pytania");
             Question.loadQuestions(this);
         } catch (IOException e) {
             broadcastLoadingFailed(QUESTIONS_FILENAME);
+            return;
         }
         broadcastLoadingFinished();
     }
@@ -120,7 +128,8 @@ public class DataLoadingService extends IntentService {
     }
 
     private void broadcastLoadingFailed(String fileName) {
-        Intent updateIntent = new Intent(ACTION_LOADING_FAILED);
-        updateIntent.putExtra(EXTRA_FILENAME, fileName);
+        Intent failedIntent = new Intent(ACTION_LOADING_FAILED);
+        failedIntent.putExtra(EXTRA_FILENAME, fileName);
+        sendBroadcast(failedIntent);
     }
 }

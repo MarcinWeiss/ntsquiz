@@ -1,14 +1,14 @@
 package medrawd.is.awesome.ntsquiz.question;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.gesture.Gesture;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureStroke;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +19,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import medrawd.is.awesome.ntsquiz.R;
-import medrawd.is.awesome.ntsquiz.legislation.Document;
 
-public class QuestionFragment extends Fragment {
+public class QuestionFragment extends Fragment implements GestureOverlayView.OnGesturePerformedListener {
     private static final String QUESTION_INDEX = "index";
     private static final String QUESTION_DISPLAY_INDEX = "displayIndex";
     private static final String QUESTIONS_NUMBER = "number";
@@ -96,15 +95,9 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_question, container, false);
-        view.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            public void onSwipeRight() {
-                mListener.onNavigatePrev();
-            }
 
-            public void onSwipeLeft() {
-                mListener.onNavigateNext();
-            }
-        });
+        GestureOverlayView qestureOverlay = (GestureOverlayView) view.findViewById(R.id.overlay);
+        qestureOverlay.addOnGesturePerformedListener(this);
 
         Log.i(TAG, mQuestion.question);
         mQuestionTextView = (TextView) view.findViewById(R.id.question);
@@ -311,6 +304,19 @@ public class QuestionFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
+        ArrayList<GestureStroke> strokeList = gesture.getStrokes();
+        // prediction = lib.recognize(gesture);
+        float f[] = strokeList.get(0).points;
+
+        if (f[0] < f[f.length - 2]) {
+            mListener.onNavigatePrev();
+        } else if (f[0] > f[f.length - 2]) {
+            mListener.onNavigateNext();
+        }
     }
 
     public interface QuestionFragmentInteractionListener {

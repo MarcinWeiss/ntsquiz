@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="36dp">
 
     <TextView
         android:id="@+id/question"
-        android:layout_margin="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="24dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         tools:text="Kto nie dopełnił obowiązku zwrotu legitymacji osoby dopuszczonej do posiadania broni, legitymacji posiadacza broni, karty rejestracyjnej broni lub europejskiej karty broni palnej podlega" />
 
@@ -20,71 +21,50 @@
         android:layout_below="@id/question">
 
         <RadioButton
-            android:layout_margin="12dp"
             android:id="@+id/answerAradioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="12dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             tools:text="karze grzywny" />
 
         <RadioButton
-            android:layout_margin="12dp"
             android:id="@+id/answerBradioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="12dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             tools:text="karze aresztu albo grzywny" />
 
         <RadioButton
-            android:layout_margin="12dp"
             android:id="@+id/answerCradioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="12dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             tools:text="aresztu" />
     </RadioGroup>
 
     <ImageButton
-        app:srcCompat="@drawable/ic_help_outline_black_24dp"
         android:id="@+id/helpButton"
-        android:elevation="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:layout_margin="8dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_navigate_next_black_24dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/nextButton"
-        android:layout_below="@+id/answers"
-        android:layout_alignRight="@+id/answers"
-        android:layout_alignEnd="@+id/answers" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_navigate_before_black_24dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/prevButton"
-        android:layout_below="@+id/answers"
-        android:layout_alignLeft="@+id/answers"
-        android:layout_alignStart="@+id/answers" />
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="false"
+        android:background="@android:color/transparent"
+        android:cropToPadding="false"
+        android:elevation="4dp"
+        app:srcCompat="@drawable/ic_help_outline_black_36dp" />
 
     <Button
-        android:text="Zakończ"
+        android:id="@+id/end_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/prevButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
-        android:id="@+id/end_button" />
+        android:text="Zakończ"
+        android:layout_below="@id/answers" />
 
 </RelativeLayout>

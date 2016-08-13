@@ -2,19 +2,21 @@ package medrawd.is.awesome.ntsquiz;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.util.ArrayMap;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -30,11 +32,14 @@ import medrawd.is.awesome.ntsquiz.question.ResultsFragment;
 public class QuizActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, QuestionFragment.QuestionFragmentInteractionListener {
 
+    private enum Direction {LEFT, RIGHT}
+
+    ;
     public static final int TEST_SIZE = 10;
     public static final String TAG = QuizActivity.class.getSimpleName();
     private boolean isQuiz;
     private int questionsIndex = 0;
-    private List<Integer> quiz = new ArrayList<>();
+    private List<Integer> selectedIndices = new ArrayList<>();
     private Map<Integer, Integer> answers = new LinkedHashMap<>();
 
     @Override
@@ -89,7 +94,7 @@ public class QuizActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if(null == getSupportFragmentManager().findFragmentById(R.id.content_quiz)){
+        if (null == getSupportFragmentManager().findFragmentById(R.id.content_quiz)) {
             navigateToAllQuestions();
         }
     }
@@ -100,8 +105,10 @@ public class QuizActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_pytania) {
+        if (id == R.id.nav_questions) {
             navigateToAllQuestions();
+        } else if (id == R.id.nav_random_questions) {
+            navigateToRandomQuestions();
         } else if (id == R.id.nav_quiz) {
             navigateToRandomQuiz();
         } else if (id == R.id.nav_uobia) {
@@ -129,34 +136,67 @@ public class QuizActivity extends AppCompatActivity
         questionsIndex = 0;
         isQuiz = true;
         answers.clear();
-        quiz.clear();
-        quiz.addAll(getRandomIndices());
-        for(int index : quiz){
+        selectedIndices.clear();
+        selectedIndices.addAll(getRandomIndices());
+        for (int index : selectedIndices) {
             answers.put(index, null);
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, QuestionFragment.newInstance(quiz.get(0), true, quiz.size(), 1)).commit();
+        showQuestion();
     }
 
     private void navigateToAllQuestions() {
         questionsIndex = 0;
         answers.clear();
+        selectedIndices.clear();
         isQuiz = false;
         showQuestion();
     }
 
-    private void showQuestion() {
-        if (answers.containsKey(questionsIndex)) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, QuestionFragment.newInstance(questionsIndex, answers.get(questionsIndex), false, Question.questions.size(), questionsIndex + 1)).commit();
-        } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, QuestionFragment.newInstance(questionsIndex, false, Question.questions.size(), questionsIndex + 1)).commit();
+    private void navigateToRandomQuestions() {
+        questionsIndex = 0;
+        isQuiz = false;
+        answers.clear();
+        selectedIndices.clear();
+        selectedIndices.addAll(getShuffledIndices());
+        for (int index : selectedIndices) {
+            answers.put(index, null);
         }
+        showQuestion();
     }
 
-    private void showTestQuestion() {
-        if (null != answers.get(quiz.get(questionsIndex))) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, QuestionFragment.newInstance(quiz.get(questionsIndex), answers.get(quiz.get(questionsIndex)), true, quiz.size(), questionsIndex + 1)).commit();
+    private void showQuestion() {
+        showQuestion(null);
+    }
+
+    private void showQuestion(Direction direction) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        addChangeAnimation(direction, fragmentTransaction);
+        if (!indicesAreSelected()) {
+            if (answers.containsKey(questionsIndex)) {
+                fragmentTransaction.replace(R.id.content_quiz, QuestionFragment.newInstance(questionsIndex, answers.get(questionsIndex), false, Question.questions.size(), questionsIndex + 1));
+            } else {
+                fragmentTransaction.replace(R.id.content_quiz, QuestionFragment.newInstance(questionsIndex, false, Question.questions.size(), questionsIndex + 1));
+            }
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, QuestionFragment.newInstance(quiz.get(questionsIndex), true, quiz.size(), questionsIndex + 1)).commit();
+            if (null != answers.get(selectedIndices.get(questionsIndex))) {
+                fragmentTransaction.replace(R.id.content_quiz, QuestionFragment.newInstance(selectedIndices.get(questionsIndex), answers.get(selectedIndices.get(questionsIndex)), isQuiz, selectedIndices.size(), questionsIndex + 1));
+            } else {
+                fragmentTransaction.replace(R.id.content_quiz, QuestionFragment.newInstance(selectedIndices.get(questionsIndex), isQuiz, selectedIndices.size(), questionsIndex + 1));
+            }
+        }
+        fragmentTransaction.commit();
+    }
+
+    private void addChangeAnimation(Direction direction, FragmentTransaction fragmentTransaction) {
+        if (null != direction) {
+            switch (direction) {
+                case LEFT:
+                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+                    break;
+                case RIGHT:
+                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    break;
+            }
         }
     }
 
@@ -170,31 +210,27 @@ public class QuizActivity extends AppCompatActivity
     public void onNavigateNext() {
         if (questionsIndex < (getQuestionsSize() - 1)) {
             questionsIndex++;
-            if (isQuiz) {
-                showTestQuestion();
-            } else {
-                showQuestion();
-            }
+            showQuestion(Direction.RIGHT);
         }
     }
 
     private int getQuestionsSize() {
-        if (isQuiz) {
-            return quiz.size();
+        if (indicesAreSelected()) {
+            return selectedIndices.size();
         } else {
             return Question.questions.size();
         }
+    }
+
+    private boolean indicesAreSelected() {
+        return null != selectedIndices && selectedIndices.size()>0;
     }
 
     @Override
     public void onNavigatePrev() {
         if (questionsIndex > 0) {
             questionsIndex--;
-            if (!isQuiz) {
-                showQuestion();
-            } else {
-                showTestQuestion();
-            }
+            showQuestion(Direction.LEFT);
         }
     }
 
@@ -204,7 +240,16 @@ public class QuizActivity extends AppCompatActivity
         ArrayList<Integer> answers = new ArrayList<>(this.answers.values());
         Log.i(TAG, "answers " + Arrays.toString(answers.toArray()));
         Log.i(TAG, "indices " + Arrays.toString(indices.toArray()));
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, ResultsFragment.newInstance(indices, answers, quiz.size())).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, ResultsFragment.newInstance(indices, answers, selectedIndices.size())).commit();
+    }
+
+    private Set<Integer> getShuffledIndices() {
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < Question.questions.size(); i++) {
+            indices.add(i);
+        }
+        Collections.shuffle(indices);
+        return new LinkedHashSet<>(indices);
     }
 
     private Set<Integer> getRandomIndices() {

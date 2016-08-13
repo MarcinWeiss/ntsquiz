@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="questions_group">Pytania</string>
+    <string name="quiz">Quiz</string>
+    <string name="all_questions">Wszystkie pytania</string>
+    <string name="app_name">NTSquiz</string>
+    <string name="random_questions">Losowe pytania</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="legislation_group">Przepisy</string>
+    <string name="uobia">UoBiA</string>
+    <string name="kodeks_karny">Kodeks Karny</string>
+    <string name="wzorcowy_regulamin_strzelnic">Wzorcowy regulamin strzelnic</string>
+    <string name="przewo_enia_broni_i_amunicji">Przewożenia broni i amunicji</string>
+    <string name="deponowanie_broni">Deponowanie broni</string>
+    <string name="noszenie_i_przechowywanie_broni">Noszenie i przechowywanie broni</string>
+    <string name="egzamin">Egzamin</string>
+    <string name="title_activity_quiz">NTS Quiz</string>
+</resources>

@@ -1,12 +1,21 @@
 <resources>
     <string name="app_name">NTSquiz</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_quiz">NTS Quiz</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="all_questions">All questions</string>
+    <string name="random_questions">Random questions</string>
+    <string name="quiz">Quiz</string>
+    <string name="questions_group">Questions</string>
+    <string name="uobia">UoBiA</string>
+    <string name="kodeks_karny">Kodeks Karny</string>
+    <string name="wzorcowy_regulamin_strzelnic">Wzorcowy regulamin strzelnic</string>
+    <string name="przewo_enia_broni_i_amunicji">Przewożenia broni i amunicji</string>
+    <string name="deponowanie_broni">Deponowanie broni</string>
+    <string name="noszenie_i_przechowywanie_broni">Noszenie i przechowywanie broni</string>
+    <string name="egzamin">Egzamin</string>
+    <string name="legislation_group">Legislation</string>
 </resources>
