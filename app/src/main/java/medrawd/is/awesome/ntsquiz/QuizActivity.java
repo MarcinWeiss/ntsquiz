@@ -1,5 +1,7 @@
 package medrawd.is.awesome.ntsquiz;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -25,6 +27,7 @@ import java.util.Random;
 import java.util.Set;
 
 import medrawd.is.awesome.ntsquiz.legislation.LegislationFragment;
+import medrawd.is.awesome.ntsquiz.nts.AboutFragment;
 import medrawd.is.awesome.ntsquiz.question.Question;
 import medrawd.is.awesome.ntsquiz.question.QuestionFragment;
 import medrawd.is.awesome.ntsquiz.question.ResultsFragment;
@@ -56,6 +59,7 @@ public class QuizActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_questions);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -125,6 +129,18 @@ public class QuizActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, LegislationFragment.newInstance("Rozporządzenie w sprawie noszenia i przechowywania broni")).commit();
         } else if (id == R.id.nav_rozporzadzenie_egzamin) {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, LegislationFragment.newInstance("Rozporządzenie w sprawie egzaminu")).commit();
+        } else if (id == R.id.nav_about_us){
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, new AboutFragment()).commit();
+        } else if (id == R.id.nav_join){
+            String url = "http://www.towarzystwostrzeleckie.org/zapisz-sie/";
+            startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
+        } else if(id == R.id.nav_contact){
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_EMAIL, Arrays.asList("kontakt@towarzystwostrzeleckie.org").toArray());
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

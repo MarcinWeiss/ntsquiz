@@ -3,41 +3,62 @@
 
     <item android:title="@string/questions_group">
         <menu>
+
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_questions"
+                    android:title="@string/all_questions" />
+                <item
+                    android:id="@+id/nav_random_questions"
+                    android:title="@string/random_questions" />
+                <item
+                    android:id="@+id/nav_quiz"
+                    android:title="@string/quiz" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/nts">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_about_us"
+                    android:title="@string/about_us" />
+            </group>
             <item
-                android:id="@+id/nav_questions"
-                android:title="@string/all_questions" />
+                android:id="@+id/nav_join"
+                android:title="@string/join" />
             <item
-                android:id="@+id/nav_random_questions"
-                android:title="@string/random_questions" />
-            <item
-                android:id="@+id/nav_quiz"
-                android:title="@string/quiz" />
+                android:id="@+id/nav_contact"
+                android:title="@string/contact" />
         </menu>
     </item>
 
     <item android:title="@string/legislation_group">
         <menu>
-            <item
-                android:id="@+id/nav_uobia"
-                android:title="@string/uobia" />
-            <item
-                android:id="@+id/nav_kk"
-                android:title="@string/kodeks_karny" />
-            <item
-                android:id="@+id/nav_regulamin_strzelnic"
-                android:title="@string/wzorcowy_regulamin_strzelnic" />
-            <item
-                android:id="@+id/nav_rozporzadzenie_przewozenie"
-                android:title="@string/przewo_enia_broni_i_amunicji" />
-            <item
-                android:id="@+id/nav_rozporzadzenie_deponowanie"
-                android:title="@string/deponowanie_broni" />
-            <item
-                android:id="@+id/nav_rozporzadzenie_noszenie"
-                android:title="@string/noszenie_i_przechowywanie_broni" />
-            <item
-                android:id="@+id/nav_rozporzadzenie_egzamin"
-                android:title="@string/egzamin" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_uobia"
+                    android:title="@string/uobia" />
+                <item
+                    android:id="@+id/nav_kk"
+                    android:title="@string/kodeks_karny" />
+                <item
+                    android:id="@+id/nav_regulamin_strzelnic"
+                    android:title="@string/wzorcowy_regulamin_strzelnic" />
+                <item
+                    android:id="@+id/nav_rozporzadzenie_przewozenie"
+                    android:title="@string/przewo_enia_broni_i_amunicji" />
+                <item
+                    android:id="@+id/nav_rozporzadzenie_deponowanie"
+                    android:title="@string/deponowanie_broni" />
+                <item
+                    android:id="@+id/nav_rozporzadzenie_noszenie"
+                    android:title="@string/noszenie_i_przechowywanie_broni" />
+                <item
+                    android:id="@+id/nav_rozporzadzenie_egzamin"
+                    android:title="@string/egzamin" />
+            </group>
         </menu>
     </item>
 </menu>
