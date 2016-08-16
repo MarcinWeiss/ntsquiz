@@ -7,22 +7,41 @@
     android:layout_height="match_parent"
     tools:context="medrawd.is.awesome.ntsquiz.LoadingActivity">
 
-    <ImageView
-        android:layout_width="256dp"
-        android:layout_height="256dp"
-        android:layout_marginTop="100dp"
-        app:srcCompat="@drawable/ic_nts_logo_coin"
-        android:id="@+id/logo_coin"
-        android:layout_centerHorizontal="true"/>
-
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logo_coin"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:text="Trwa ładowanie danych"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
         android:id="@+id/loading_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="ładuję Rozporządzenie w sprawie szczegółowych zasad deponowania i niszczenia broni i amunicji w depozycie Policji, Żandarmerii Wojskowej lub organu celnego oraz stawki odpłatności za ich przechowywanie w depozycie" />
+
+    <ImageView
+        android:id="@+id/logo_coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:layout_marginRight="48dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
         android:layout_marginLeft="48dp"
-        tools:text="ładuję Rozporządzenie w sprawie szczegółowych zasad deponowania i niszczenia broni i amunicji w depozycie Policji, Żandarmerii Wojskowej lub organu celnego oraz stawki odpłatności za ich przechowywanie w depozycie"/>
+        app:srcCompat="@drawable/ic_nts_logo_coin"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside" />
 </RelativeLayout>

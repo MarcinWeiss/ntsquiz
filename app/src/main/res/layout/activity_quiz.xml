@@ -20,6 +20,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_quiz"
-        app:menu="@menu/activity_quiz_drawer" />
+        app:menu="@menu/activity_quiz_drawer"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Menu" />
 
 </android.support.v4.widget.DrawerLayout>

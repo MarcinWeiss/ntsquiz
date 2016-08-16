@@ -15,4 +15,9 @@
     <string name="noszenie_i_przechowywanie_broni">Noszenie i przechowywanie broni</string>
     <string name="egzamin">Egzamin</string>
     <string name="title_activity_quiz">NTS Quiz</string>
+    <string name="join">Dołącz do nas</string>
+    <string name="about_us">O nas</string>
+    <string name="navigation_drawer_close">Zamknij szufladę</string>
+    <string name="navigation_drawer_open">Otwórz szufladę</string>
+    <string name="contact">Kontakt</string>
 </resources>

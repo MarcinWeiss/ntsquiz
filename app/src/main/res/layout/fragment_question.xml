@@ -19,7 +19,8 @@
             android:eventsInterceptionEnabled="true"
             android:gestureStrokeType="multiple"
             android:gestureColor="@android:color/transparent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:uncertainGestureColor="@android:color/transparent">
 
             <RelativeLayout
                 android:layout_width="match_parent"

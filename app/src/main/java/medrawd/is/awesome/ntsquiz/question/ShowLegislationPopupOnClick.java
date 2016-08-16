@@ -45,7 +45,7 @@ public class ShowLegislationPopupOnClick implements View.OnClickListener {
         // set dialog message
         alertDialogBuilder
                 .setMessage(Html.fromHtml(message))
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton("zamknij", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
