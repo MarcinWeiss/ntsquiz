@@ -47,11 +47,13 @@ public class AnsweredQuestionRecyclerAdapter extends RecyclerView.Adapter<Answer
         holder.question.setText(question.getQuestion());
         if (null == answer) {
             holder.selectedAnswer.setText("BRAK ODPOWIEDZI");
+            holder.selectedAnswerHolder.setVisibility(View.VISIBLE);
         } else if (answer != question.getCorrectAnswer()) {
             Log.i(TAG, String.format("index %d", position));
             Log.i(TAG, String.format("answer %d", answer));
             Log.i(TAG, String.format("answers %s", Arrays.toString(question.getAnswers())));
             holder.selectedAnswer.setText(question.getAnswers()[answer]);
+            holder.selectedAnswerHolder.setVisibility(View.VISIBLE);
         } else {
             holder.selectedAnswerHolder.setVisibility(View.GONE);
         }

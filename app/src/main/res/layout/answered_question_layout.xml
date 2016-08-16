@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 tools:text="Kto nie dopełnił obowiązku zwrotu legitymacji osoby dopuszczonej do posiadania broni, legitymacji posiadacza broni, karty rejestracyjnej broni lub europejskiej karty broni palnej podlega"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="42dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
                 android:layout_marginBottom="12dp" />
@@ -55,7 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp">
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/textView2"
@@ -67,9 +68,11 @@
                 android:id="@+id/correct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                tools:text="karze aresztu albo grzywny" />
+                tools:text="karze aresztu albo grzywny"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp" />
 
         </RelativeLayout>
 
@@ -78,7 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp">
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/textView3"
@@ -90,10 +94,12 @@
                 android:id="@+id/selected"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/holo_red_dark"
-                tools:text="karze grzywny" />
+                tools:text="karze grzywny"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="18dp" />
         </RelativeLayout>
 
     </LinearLayout>
