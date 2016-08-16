@@ -11,7 +11,7 @@
         android:layout_width="256dp"
         android:layout_height="256dp"
         android:layout_marginTop="100dp"
-        app:srcCompat="@drawable/ic_nts_logo"
+        app:srcCompat="@drawable/ic_nts_logo_coin"
         android:id="@+id/logo_coin"
         android:layout_centerHorizontal="true"/>
 
