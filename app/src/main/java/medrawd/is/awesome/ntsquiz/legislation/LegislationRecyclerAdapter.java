@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
+
 import java.util.ArrayList;
 
 import medrawd.is.awesome.ntsquiz.R;
 
-public class LegislationRecyclerAdapter extends RecyclerView.Adapter<LegislationRecyclerAdapter.CustomViewHolder> {
+public class LegislationRecyclerAdapter extends RecyclerView.Adapter<LegislationRecyclerAdapter.CustomViewHolder> implements SectionTitleProvider {
     private final Document document;
     private final ArrayList<String> keys;
 
@@ -36,6 +38,11 @@ public class LegislationRecyclerAdapter extends RecyclerView.Adapter<Legislation
     @Override
     public int getItemCount() {
         return document.getContent().size();
+    }
+
+    @Override
+    public String getSectionTitle(int position) {
+        return document.get(keys.get(position)).getTextA();
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {

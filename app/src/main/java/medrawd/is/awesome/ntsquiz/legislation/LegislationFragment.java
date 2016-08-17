@@ -1,13 +1,18 @@
 package medrawd.is.awesome.ntsquiz.legislation;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.futuremind.recyclerviewfastscroll.FastScroller;
+import com.futuremind.recyclerviewfastscroll.RecyclerViewScrollListener;
+import com.futuremind.recyclerviewfastscroll.viewprovider.ScrollerViewProvider;
+import com.futuremind.recyclerviewfastscroll.viewprovider.ViewBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +53,14 @@ public class LegislationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_legislation, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.listView);
-        fastScroller = (FastScroller) view.findViewById(R.id.fastscroll);
-        fastScroller.setRecyclerView(recyclerView);
         List<String> paragraphs = new ArrayList<>();
         for (Map.Entry<String, Document> entry : Document.documents.entrySet()) {
             paragraphs.add(entry.getValue().getParagraph());
         }
         recyclerView.setAdapter(new LegislationRecyclerAdapter(name));
+
+        fastScroller = (FastScroller) view.findViewById(R.id.fastscroll);
+        fastScroller.setRecyclerView(recyclerView);
 
         return view;
     }
