@@ -25,6 +25,7 @@ import static medrawd.is.awesome.ntsquiz.LoadingActivity.ACTION_DOWNLOADING_UPDA
 import static medrawd.is.awesome.ntsquiz.LoadingActivity.EXTRA_STAGE;
 
 public class RemoteResourcesService extends IntentService {
+    public static final int MAX_FAILED_ATTEMPTS = 3;
     private static final String TAG = RemoteResourcesService.class.getSimpleName();
 
     private static final String ACTION_DOWNLOAD_RESOURCES = "medrawd.is.awesome.ntsquiz.storage.action.DOWNLOAD_RESOURCES";
@@ -32,6 +33,7 @@ public class RemoteResourcesService extends IntentService {
     public static final String EXTRA_FILES_NAMES = "medrawd.is.awesome.ntsquiz.storage.action.FILES_NAMES";
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();;
     private static List<String> filesNames;
+    private static int failedAttempts = 0;
 
     public RemoteResourcesService() {
         super("RemoteResourcesService");
@@ -57,7 +59,7 @@ public class RemoteResourcesService extends IntentService {
             if (ACTION_DOWNLOAD_RESOURCES.equals(action)) {
                 filesNames = new ArrayList<>(Arrays.asList(intent.getStringArrayExtra(EXTRA_FILES_NAMES)));
                 broadcastDownloadingUpdate("sprawdzanie plików");
-                downloadNext();
+                downladFirst();
             } else if (ACTION_DOWNLOAD_RESOURCE.equals(action)) {
                 downloadFileIfNeeded();
             }
@@ -77,28 +79,31 @@ public class RemoteResourcesService extends IntentService {
                         broadcastDownloadingUpdate("pobieram plik " + filename);
                         downloadFile(filename);
                     } else {
-                        filesNames.remove(0);
                         downloadNext();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    filesNames.remove(0);
                     downloadNext();
                 }
             });
         } else {
-            filesNames.remove(0);
             downloadNext();
         }
+    }
+
+    private void downloadNext() {
+        filesNames.remove(0);
+        downladFirst();
     }
 
     private boolean fileIsOutdated(StorageMetadata storageMetadata, String filename) {
         return getModificationDate(filename) < storageMetadata.getUpdatedTimeMillis();
     }
 
-    private void downloadNext() {
+    private void downladFirst() {
+        failedAttempts = 0;
         if(filesNames.size()>0){
             downloadResource(getApplicationContext());
         } else {
@@ -121,16 +126,20 @@ public class RemoteResourcesService extends IntentService {
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 Log.i(TAG, String.format("file %s downloaded", filename));
                 broadcastDownloadingUpdate(String.format("plik %s został pmyślnie pobrany", filename));
-                filesNames.remove(0);
                 downloadNext();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Log.w(TAG, String.format("file %s could not be downloaded", filename));
-                broadcastDownloadingUpdate(String.format("nieudało się pobrać pliku %s", filename));
-                filesNames.remove(0);
-                downloadNext();
+                failedAttempts++;
+                if(failedAttempts< MAX_FAILED_ATTEMPTS){
+                    Log.w(TAG, String.format("problem downladong %s try %d out of %d", filename, failedAttempts, MAX_FAILED_ATTEMPTS));
+                    downloadFile(filename);
+                } else {
+                    Log.w(TAG, String.format("file %s could not be downloaded", filename));
+                    broadcastDownloadingUpdate(String.format("nieudało się pobrać pliku %s", filename));
+                    downloadNext();
+                }
             }
         });
     }
