@@ -133,7 +133,7 @@ public class RemoteResourcesService extends IntentService {
             public void onFailure(@NonNull Exception exception) {
                 failedAttempts++;
                 if (failedAttempts < MAX_FAILED_ATTEMPTS) {
-                    Log.w(TAG, String.format("problem downladong %s try %d out of %d", filename, failedAttempts, MAX_FAILED_ATTEMPTS));
+                    Log.w(TAG, String.format("problem downloading %s try %d out of %d", filename, failedAttempts, MAX_FAILED_ATTEMPTS));
                     downloadFile(filename);
                 } else {
                     Log.w(TAG, String.format("file %s could not be downloaded", filename));

@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,14 +33,14 @@ import medrawd.is.awesome.ntsquiz.question.Question;
 import medrawd.is.awesome.ntsquiz.question.QuestionFragment;
 import medrawd.is.awesome.ntsquiz.question.ResultsFragment;
 
-public class QuizActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, QuestionFragment.QuestionFragmentInteractionListener {
 
     public static final String TYPE_ANY = "*/*";
     public static final int TEST_SIZE = 10;
 
     ;
-    public static final String TAG = QuizActivity.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
     private boolean isQuiz;
     private int questionsIndex = 0;
     private List<Integer> selectedIndices = new ArrayList<>();
@@ -48,14 +49,15 @@ public class QuizActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
+        drawer.openDrawer(Gravity.LEFT);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
