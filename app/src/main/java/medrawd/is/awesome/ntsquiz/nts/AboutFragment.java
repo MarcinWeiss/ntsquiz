@@ -4,6 +4,7 @@ package medrawd.is.awesome.ntsquiz.nts;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class AboutFragment extends Fragment {
 
         TextView aboutUsTextView = (TextView) view.findViewById(R.id.about_us_textview);
         aboutUsTextView.setText(Html.fromHtml(getString(R.string.about_us_html)));
+        aboutUsTextView.setMovementMethod(LinkMovementMethod.getInstance());
         return view;
     }
 
