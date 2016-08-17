@@ -18,7 +18,7 @@
         </menu>
     </item>
 
-    <item android:title="@string/nts">
+    <item android:title="@string/nts_group">
         <menu>
             <group android:checkableBehavior="single">
                 <item

@@ -12,7 +12,6 @@
     <string name="wzorcowy_regulamin_strzelnic">Wzorcowy regulamin strzelnic</string>
     <string name="przewo_enia_broni_i_amunicji">Przewożenia broni i amunicji</string>
     <string name="deponowanie_broni">Deponowanie broni</string>
-    <string name="noszenie_i_przechowywanie_broni">Noszenie i przechowywanie broni</string>
     <string name="egzamin">Egzamin</string>
     <string name="title_activity_quiz">NTS Quiz</string>
     <string name="join">Dołącz do nas</string>
@@ -25,4 +24,6 @@
     <string name="file_download_failure_popup_message">Plik %s nie został poprawnie pobrany, sprawdź połączenie z internetem i spróbuj ponownie</string>
     <string name="file_download_failure_popup_positive">zamknij</string>
     <string name="file_download_failure_popup_title">Nieudało się załadować %s</string>
+    <string name="exit_popup_negative">Nie</string>
+    <string name="exit_popup_positive">Tak</string>
 </resources>

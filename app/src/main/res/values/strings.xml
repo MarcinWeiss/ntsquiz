@@ -15,16 +15,21 @@
     <string name="wzorcowy_regulamin_strzelnic">Wzorcowy regulamin strzelnic</string>
     <string name="przewo_enia_broni_i_amunicji">Przewożenia broni i amunicji</string>
     <string name="deponowanie_broni">Deponowanie broni</string>
-    <string name="noszenie_i_przechowywanie_broni">Noszenie i przechowywanie broni</string>
+    <string name="noszenie_i_przechowywanie_broni" translatable="false">Noszenie i przechowywanie broni</string>
     <string name="egzamin">Egzamin</string>
     <string name="legislation_group">Legislation</string>
     <string name="about_us">About us</string>
     <string name="join">Join</string>
-    <string name="nts" translatable="false">NTS</string>
+    <string name="nts_group" translatable="false">NTS</string>
     <string name="about_us_html" translatable="false"><![CDATA[<header><h2> O nas</h2><p>Kim jesteśmy i co robimy</p></header><p>NTS jest stowarzyszeniem kolekcjonerskim broni palnej i klubem sportowym (licencja LK283-2016) zrzeszonym w Polskim Związku Strzelectwa Sportowego. Jesteśmy ogólnopolską organizacją&nbsp;której zadaniem jest popularyzacja strzelectwa, budowa kultury i ruchu strzeleckiego w Polsce, wprowadzanie europejskich standardów w zakresie posiadania broni palnej. Pracujemy u podstaw: pokazujemy ludziom jak rozpocząć przygodę ze strzelectwem, szkolimy z zasad bezpiecznego posługiwania się bronią. Popularyzujemy standardy bezpieczeństwa, edukujemy w zakresie prawa do posiadania broni palnej.<br><br><strong>Główne zadania NTS:</strong></p><ul><li>edukowanie społeczeństwa i zwiększanie ilości posiadaczy broni palnej w Polsce.</li><li>szkolenie członków NTS z zakresu techniki strzelectwa, bezpieczeństwa i przepisów prawa .</li><li>wspieranie członków NTS w zakresie spraw związanych z posiadaniem broni palnej.</li><li>organizowanie spotkań, szkoleń, aktywności sportowej w zakresie strzelectwa.</li><li>wpływanie na proces stanowienia prawa w zakresie broni palnej, edukacji obronnej w porozumieniu i koordynacji z innymi stowarzyszeniami.</li><li>przygotowanie bazy technicznej strzelectwa czyli wspieranie klubów strzeleckich i wszystkich inicjatyw mających na celu budowę strzelnic.</li><li>konsultowanie i wspieranie członków stowarzyszenia w zakresie kolekcjonerstwa broni i militariów, rekonstrukcji historycznych, strzelectwa praktycznego.</li></ul><br>Dlaczego Towarzystwo Strzeleckie? bo brakuje skutecznie działającego stowarzyszenia które będzie walczyć&nbsp;o prawa strzelców - obywateli, bo udział w stowarzyszeniu jest istotna przesłanką do posiadania broni do celów kolekcjonerskich i do celów sportowych.<br><br>Wreszcie dlatego, że mamy coś ważnego do zrobienia: przygotować odpowiednie strzelnice, zwiększyć poziom wyszkolenia strzeleckiego obywateli a pośrednio zwiększyć potencjał obronny Polski<br><p></p>]]></string>
     <string name="contact">Contact</string>
-    <string name="exit_popup_positive">Tak</string>
-    <string name="exit_popup_negative">Nie</string>
-    <string name="contact_email">kontakt@towarzystwostrzeleckie.org</string>
-    <string name="join_url">http://www.towarzystwostrzeleckie.org/zapisz-sie/</string>
+    <string name="join_url" translatable="false">http://www.towarzystwostrzeleckie.org/zapisz-sie/</string>
+    <string name="exit_popup_message">Are you sure you want to leave?</string>
+    <string name="exit_popup_negative">No</string>
+    <string name="exit_popup_positive">Yes</string>
+    <string name="exit_popup_title">Exit</string>
+    <string name="file_download_failure_popup_message">File %s could not be downloaded, please check internet connection and try again.</string>
+    <string name="file_download_failure_popup_positive">close</string>
+    <string name="file_download_failure_popup_title">Unable to load %s</string>
+    <string name="contact_email" translatable="false">kontakt@towarzystwostrzeleckie.org</string>
 </resources>
