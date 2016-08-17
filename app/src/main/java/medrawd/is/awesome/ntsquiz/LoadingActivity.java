@@ -2,7 +2,6 @@ package medrawd.is.awesome.ntsquiz;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,9 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -47,11 +44,10 @@ public class LoadingActivity extends AppCompatActivity {
     public static final String ACTION_LOADING_FAILED = "medrawd.is.awesome.ntsquiz.ACTION_LOADING_FAILED";
     public static final String EXTRA_STAGE = "medrawd.is.awesome.ntsquiz.EXTRA_STAGE";
     public static final String EXTRA_FILENAME = "medrawd.is.awesome.ntsquiz.EXTRA_FILENAME";
-
-    private static final String TAG = LoadingActivity.class.getSimpleName();
     public static final String UPDATE_PREFS = "updatePrefs";
     public static final String LAST_UPDATE = "lastUpdate";
     public static final int MILIS_IN_DAY = 86400000;
+    private static final String TAG = LoadingActivity.class.getSimpleName();
     private TextView loadingDetails;
     private BroadcastReceiver mReceiver;
     private boolean mReceiverRegistered;
@@ -94,11 +90,11 @@ public class LoadingActivity extends AppCompatActivity {
                     Log.d(TAG, "action loading failed");
                     String stringExtra = intent.getStringExtra(EXTRA_FILENAME);
                     android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
-                    alertDialogBuilder.setTitle(String.format("Nieudało się załadować %s", stringExtra));
+                    alertDialogBuilder.setTitle(getString(R.string.file_download_failure_popup_title, stringExtra));
                     alertDialogBuilder
-                            .setMessage(String.format("Plik %s nie został poprawnie pobrany, sprawdź połączenie z internetem i spróbuj ponownie", stringExtra))
+                            .setMessage(getString(R.string.file_download_failure_popup_message, stringExtra))
                             .setCancelable(false)
-                            .setPositiveButton("zamknij", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.file_download_failure_popup_positive, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.dismiss();

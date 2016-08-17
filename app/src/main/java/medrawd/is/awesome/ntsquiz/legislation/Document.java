@@ -22,9 +22,8 @@ public class Document {
     public static final String ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME = "Rozporządzenie w sprawie przewożenia broni i amunicji.txt";
     public static final String ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME = "Rozporządzenie w sprawie deponowania broni.txt";
     public static final String ROZPORZĄDZENIE_NOSZENIE_FILENAME = "Rozporządzenie w sprawie przechowywania i noszenia broni.txt";
-    public static Map<String, Document> documents = new HashMap<>();
-
     private static final String TAG = Document.class.getSimpleName();
+    public static Map<String, Document> documents = new HashMap<>();
     private static Pattern article = Pattern.compile("^Art\\. (\\d+\\w*)\\..*");
     private static Pattern chapter = Pattern.compile("Rozdział (\\d+) .+");
     private static Pattern point = Pattern.compile("(\\d+)\\. .*");
@@ -37,29 +36,9 @@ public class Document {
     String textA;
     String textB;
 
-    public String getParagraph(String... keys) {
-        Log.w(TAG, Arrays.toString(content.keySet().toArray()));
-        Document previous = null;
-        Document target = this;
-        String lastKey = null;
-        for (String key : keys) {
-            Log.w(TAG, key);
-            previous = target;
-            lastKey = key;
-            target = target.get(key);
-        }
-
-        if (previous != null && keys.length>2) {
-            return paragraphToStringWithBold(previous, lastKey);
-        } else {
-            return paragraphToString(target);
-        }
+    public Document(String text) {
+        textA = text;
     }
-
-    public Document get(String key) {
-        return content.get(key);
-    }
-
 
     private static String paragraphToStringWithBold(Document paragraph, String keyToBold) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -87,51 +66,17 @@ public class Document {
     private static String paragraphMapToString(Map<String, Document> map, String keyToBold) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, Document> entry : map.entrySet()) {
-            if(entry.getKey().equals(keyToBold)){
+            if (entry.getKey().equals(keyToBold)) {
                 stringBuilder.append("<b>");
             }
             stringBuilder.append(paragraphToString(entry.getValue()));
-            if(entry.getKey().equals(keyToBold)){
+            if (entry.getKey().equals(keyToBold)) {
                 stringBuilder.append("</b>");
             }
             stringBuilder.append("<br>");
         }
         stringBuilder.delete(stringBuilder.length() - 4, stringBuilder.length());
         return stringBuilder.toString();
-    }
-
-
-    public Document(String text) {
-        textA = text;
-    }
-
-    public String getTextB() {
-        return textB;
-    }
-
-    public void setTextB(String textB) {
-        this.textB = textB;
-    }
-
-    public Map<String, Document> getContent() {
-        return content;
-    }
-
-    public void setContent(Map<String, Document> content) {
-        this.content.clear();
-        this.content.putAll(content);
-    }
-
-    public String getTextA() {
-        return textA;
-    }
-
-    public void setTextA(String textA) {
-        this.textA = textA;
-    }
-
-    public void addContent(String key, Document paragraph) {
-        content.put(key, paragraph);
     }
 
     public static Document loadUoBiA(Context context) throws IOException {
@@ -325,6 +270,58 @@ public class Document {
             line = reader.readLine();
         }
         return article;
+    }
+
+    public String getParagraph(String... keys) {
+        Log.w(TAG, Arrays.toString(content.keySet().toArray()));
+        Document previous = null;
+        Document target = this;
+        String lastKey = null;
+        for (String key : keys) {
+            Log.w(TAG, key);
+            previous = target;
+            lastKey = key;
+            target = target.get(key);
+        }
+
+        if (previous != null && keys.length > 2) {
+            return paragraphToStringWithBold(previous, lastKey);
+        } else {
+            return paragraphToString(target);
+        }
+    }
+
+    public Document get(String key) {
+        return content.get(key);
+    }
+
+    public String getTextB() {
+        return textB;
+    }
+
+    public void setTextB(String textB) {
+        this.textB = textB;
+    }
+
+    public Map<String, Document> getContent() {
+        return content;
+    }
+
+    public void setContent(Map<String, Document> content) {
+        this.content.clear();
+        this.content.putAll(content);
+    }
+
+    public String getTextA() {
+        return textA;
+    }
+
+    public void setTextA(String textA) {
+        this.textA = textA;
+    }
+
+    public void addContent(String key, Document paragraph) {
+        content.put(key, paragraph);
     }
 
 }

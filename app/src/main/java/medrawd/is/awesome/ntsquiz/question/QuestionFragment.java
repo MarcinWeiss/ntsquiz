@@ -24,14 +24,12 @@ import java.util.ArrayList;
 import medrawd.is.awesome.ntsquiz.R;
 
 public class QuestionFragment extends Fragment implements GestureOverlayView.OnGesturePerformedListener {
+    public static final String SELECTED_ANSWER = "selectedAnswer";
+    public static final String TEST = "test";
+    public static final String TAG = QuestionFragment.class.getSimpleName();
     private static final String QUESTION_INDEX = "index";
     private static final String QUESTION_DISPLAY_INDEX = "displayIndex";
     private static final String QUESTIONS_NUMBER = "number";
-    public static final String SELECTED_ANSWER = "selectedAnswer";
-    public static final String TEST = "test";
-
-    public static final String TAG = QuestionFragment.class.getSimpleName();
-
     private QuestionFragmentInteractionListener mListener;
     private TextView mQuestionTextView;
     private RadioGroup mAnswerRadioButtons;

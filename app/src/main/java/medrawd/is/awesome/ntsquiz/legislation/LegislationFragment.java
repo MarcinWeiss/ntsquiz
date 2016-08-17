@@ -51,7 +51,7 @@ public class LegislationFragment extends Fragment {
         fastScroller = (FastScroller) view.findViewById(R.id.fastscroll);
         fastScroller.setRecyclerView(recyclerView);
         List<String> paragraphs = new ArrayList<>();
-        for(Map.Entry<String, Document> entry : Document.documents.entrySet()){
+        for (Map.Entry<String, Document> entry : Document.documents.entrySet()) {
             paragraphs.add(entry.getValue().getParagraph());
         }
         recyclerView.setAdapter(new LegislationRecyclerAdapter(name));

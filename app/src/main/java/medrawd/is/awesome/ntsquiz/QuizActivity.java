@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.ArraySet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -37,10 +35,10 @@ import medrawd.is.awesome.ntsquiz.question.ResultsFragment;
 public class QuizActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, QuestionFragment.QuestionFragmentInteractionListener {
 
-    private enum Direction {LEFT, RIGHT}
+    public static final String TYPE_ANY = "*/*";
+    public static final int TEST_SIZE = 10;
 
     ;
-    public static final int TEST_SIZE = 10;
     public static final String TAG = QuizActivity.class.getSimpleName();
     private boolean isQuiz;
     private int questionsIndex = 0;
@@ -73,17 +71,16 @@ public class QuizActivity extends AppCompatActivity
         } else {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Wyjście")
-                    .setMessage("Czy napewno chcesz wyjsć?")
-                    .setPositiveButton("Tak", new DialogInterface.OnClickListener()
-                    {
+                    .setTitle(R.string.exit_popup_title)
+                    .setMessage(R.string.exit_popup_message)
+                    .setPositiveButton(R.string.exit_popup_positive, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
                         }
 
                     })
-                    .setNegativeButton("Nie", null)
+                    .setNegativeButton(R.string.exit_popup_negative, null)
                     .show();
         }
     }
@@ -144,15 +141,15 @@ public class QuizActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, LegislationFragment.newInstance("Rozporządzenie w sprawie noszenia i przechowywania broni")).commit();
         } else if (id == R.id.nav_rozporzadzenie_egzamin) {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, LegislationFragment.newInstance("Rozporządzenie w sprawie egzaminu")).commit();
-        } else if (id == R.id.nav_about_us){
+        } else if (id == R.id.nav_about_us) {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, new AboutFragment()).commit();
-        } else if (id == R.id.nav_join){
-            String url = "http://www.towarzystwostrzeleckie.org/zapisz-sie/";
+        } else if (id == R.id.nav_join) {
+            String url = getString(R.string.join_url);
             startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
-        } else if(id == R.id.nav_contact){
+        } else if (id == R.id.nav_contact) {
             Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("*/*");
-            intent.putExtra(Intent.EXTRA_EMAIL, Arrays.asList("kontakt@towarzystwostrzeleckie.org").toArray());
+            intent.setType(TYPE_ANY);
+            intent.putExtra(Intent.EXTRA_EMAIL, Arrays.asList(getString(R.string.contact_email)).toArray());
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
             }
@@ -254,7 +251,7 @@ public class QuizActivity extends AppCompatActivity
     }
 
     private boolean indicesAreSelected() {
-        return null != selectedIndices && selectedIndices.size()>0;
+        return null != selectedIndices && selectedIndices.size() > 0;
     }
 
     @Override
@@ -292,4 +289,6 @@ public class QuizActivity extends AppCompatActivity
         }
         return generated;
     }
+
+    private enum Direction {LEFT, RIGHT}
 }

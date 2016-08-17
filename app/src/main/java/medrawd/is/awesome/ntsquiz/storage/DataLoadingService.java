@@ -1,8 +1,8 @@
 package medrawd.is.awesome.ntsquiz.storage;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.io.IOException;

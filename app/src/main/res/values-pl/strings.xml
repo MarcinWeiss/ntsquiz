@@ -20,4 +20,9 @@
     <string name="navigation_drawer_close">Zamknij szufladę</string>
     <string name="navigation_drawer_open">Otwórz szufladę</string>
     <string name="contact">Kontakt</string>
+    <string name="exit_popup_title">Wyjście</string>
+    <string name="exit_popup_message">Czy napewno chcesz wyjsć?</string>
+    <string name="file_download_failure_popup_message">Plik %s nie został poprawnie pobrany, sprawdź połączenie z internetem i spróbuj ponownie</string>
+    <string name="file_download_failure_popup_positive">zamknij</string>
+    <string name="file_download_failure_popup_title">Nieudało się załadować %s</string>
 </resources>

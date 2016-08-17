@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import medrawd.is.awesome.ntsquiz.R;
 
-public class LegislationRecyclerAdapter extends RecyclerView.Adapter<LegislationRecyclerAdapter.CustomViewHolder>{
+public class LegislationRecyclerAdapter extends RecyclerView.Adapter<LegislationRecyclerAdapter.CustomViewHolder> {
     private final Document document;
     private final ArrayList<String> keys;
 

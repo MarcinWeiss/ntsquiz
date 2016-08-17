@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import medrawd.is.awesome.ntsquiz.R;
 import medrawd.is.awesome.ntsquiz.legislation.Document;
 
 public class Question {
@@ -50,15 +49,15 @@ public class Question {
         if (documentNameMatcher.matches()) {
             justificationAddress.add(documentNameMatcher.group(1));
         } else {
-            throw new RuntimeException("justification error no document name "+justification);
+            throw new RuntimeException("justification error no document name " + justification);
         }
         if (articleNameMatcher.matches()) {
             justificationAddress.add(articleNameMatcher.group(1));
         } else {
-            if(chapterNameMatcher.matches()){
+            if (chapterNameMatcher.matches()) {
                 justificationAddress.add(chapterNameMatcher.group(1));
             } else {
-                if(paragraphNameMatcher.matches()){
+                if (paragraphNameMatcher.matches()) {
                     justificationAddress.add(paragraphNameMatcher.group(1));
                 }
             }

@@ -70,7 +70,7 @@ public class ResultsFragment extends Fragment {
         results.setText("" + mCorrect + "/" + numberOfQuestions);
 
         AnsweredQuestionRecyclerAdapter adapter = new AnsweredQuestionRecyclerAdapter(indices, answers, getContext());
-        RecyclerView answeredQuestionsList = (RecyclerView)view.findViewById(R.id.answers);
+        RecyclerView answeredQuestionsList = (RecyclerView) view.findViewById(R.id.answers);
         answeredQuestionsList.setAdapter(adapter);
         return view;
     }
