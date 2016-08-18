@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean shouldOpenMenuOnStart(){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPref.getBoolean("start_with_menu_open", false);
+        return sharedPref.getBoolean("start_with_menu_open", true);
     }
 
     private enum Direction {LEFT, RIGHT}
