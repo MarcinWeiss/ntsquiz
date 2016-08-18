@@ -2,6 +2,7 @@ package medrawd.is.awesome.ntsquiz;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity
 
     ;
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String ALL_QUESTIONS_PREFS_NAME = "allquestionsprefs";
+    public static final String START_INDEX_PREF_NAME = "startIndex";
     private boolean isQuiz;
     private int questionsIndex = 0;
     private List<Integer> selectedIndices = new ArrayList<>();
@@ -175,11 +178,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void navigateToAllQuestions() {
-        questionsIndex = 0;
+        questionsIndex = getAllQuestionsStartIndex();
         answers.clear();
         selectedIndices.clear();
         isQuiz = false;
         showQuestion();
+    }
+
+    private int getAllQuestionsStartIndex() {
+        SharedPreferences prefs = getSharedPreferences(ALL_QUESTIONS_PREFS_NAME, MODE_PRIVATE);
+        return prefs.getInt(START_INDEX_PREF_NAME, 0);
+    }
+
+    private void saveAllQuestionsStartIndex(int index) {
+        SharedPreferences prefs = getSharedPreferences(ALL_QUESTIONS_PREFS_NAME, MODE_PRIVATE);
+        prefs.edit().putInt(START_INDEX_PREF_NAME, index).commit();
     }
 
     private void navigateToRandomQuestions() {
@@ -202,6 +215,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         addChangeAnimation(direction, fragmentTransaction);
         if (!indicesAreSelected()) {
+            saveAllQuestionsStartIndex(questionsIndex);
             if (answers.containsKey(questionsIndex)) {
                 fragmentTransaction.replace(R.id.content_quiz, QuestionFragment.newInstance(questionsIndex, answers.get(questionsIndex), false, Question.questions.size(), questionsIndex + 1));
             } else {
