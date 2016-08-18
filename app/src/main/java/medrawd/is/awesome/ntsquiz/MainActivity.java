@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -60,7 +61,11 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        drawer.openDrawer(Gravity.LEFT);
+
+        if (shouldOpenMenuOnStart()) {
+            drawer.openDrawer(Gravity.LEFT);
+        }
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -99,16 +104,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            startActivity(new Intent(this, SettingsActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -304,6 +303,11 @@ public class MainActivity extends AppCompatActivity
             generated.add(next);
         }
         return generated;
+    }
+
+    private boolean shouldOpenMenuOnStart(){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPref.getBoolean("start_with_menu_open", false);
     }
 
     private enum Direction {LEFT, RIGHT}

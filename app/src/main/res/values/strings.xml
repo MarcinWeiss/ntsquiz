@@ -32,4 +32,40 @@
     <string name="file_download_failure_popup_positive">close</string>
     <string name="file_download_failure_popup_title">Unable to load %s</string>
     <string name="contact_email" translatable="false">kontakt@towarzystwostrzeleckie.org</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data Updates</string>
+
+    <string name="pref_title_time_between_updates">Minimal time between updates</string>
+    <string-array name="pref_time_between_updates_titles">
+        <item>each start</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
+        <item>week</item>
+        <item>month</item>
+    </string-array>
+    <string-array name="pref_time_between_updates_values">
+        <item>0</item>
+        <item>43200000</item>
+        <item>86400000</item>
+        <item>604800000</item>
+        <item>2629743831</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="check_for_updates_preference">Check for updates</string>
+    <string name="start_with_menu_open_preference">Start with menu open</string>
+    <string name="only_wifi_update_preference">Update only through WiFi</string>
+    <string name="time_between_updates_preference">Min time between updates</string>
+    <string name="update_on_startup_preference">Update data on startup</string>
+    <string name="pref_off">off</string>
+    <string name="pref_on">on</string>
+
 </resources>

@@ -1,0 +1,18 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="medrawd.is.awesome.ntsquiz.SettingsActivity$GeneralPreferenceFragment"
+        android:icon="@drawable/ic_info_black_24dp"
+        android:title="@string/pref_header_general" />
+
+    <header
+        android:fragment="medrawd.is.awesome.ntsquiz.SettingsActivity$DataUpdatePreferenceFragment"
+        android:icon="@drawable/ic_sync_black_24dp"
+        android:title="@string/pref_header_data_sync" />
+
+    <header
+        android:fragment="medrawd.is.awesome.ntsquiz.SettingsActivity$UpdateNowPreferenceFragment"
+        android:title="@string/check_for_updates_preference"/>
+</preference-headers>

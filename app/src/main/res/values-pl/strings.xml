@@ -26,4 +26,24 @@
     <string name="file_download_failure_popup_title">Nieudało się załadować %s</string>
     <string name="exit_popup_negative">Nie</string>
     <string name="exit_popup_positive">Tak</string>
+    <string name="only_wifi_update_preference">Aktualizuj tylko przez WiFi</string>
+    <string name="time_between_updates_preference">Czas między próbami aktualizacji</string>
+    <string name="update_on_startup_preference">Aktualizuj dane przy uruchomieniu</string>
+    <string name="check_for_updates_preference">Sprawdz aktualizacje</string>
+    <string name="pref_header_data_sync">Aktualizacja danych</string>
+    <string name="pref_header_general">Ogólne</string>
+    <string name="pref_title_time_between_updates">Minimalny czas między aktualizacjami</string>
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="start_with_menu_open_preference">Uruchom z otwartym menu</string>
+    <string name="pref_on">włączone</string>
+    <string name="pref_off">wyłączone</string>
+
+
+    <string-array name="pref_time_between_updates_titles">
+        <item>przy każdym uruchomieniu</item>
+        <item>12 godzin</item>
+        <item>24 godziny</item>
+        <item>tydzień</item>
+        <item>miesiąc</item>
+    </string-array>
 </resources>

@@ -1,11 +1,16 @@
 <resources>
 
-    <style name="NtsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="NtsTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@android:color/background_light</item>
         <item name="android:colorForeground">@color/foreground_material_dark</item>
+    </style>
+
+    <style name="NtsTheme.NoActionBar" parent="NtsTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="NtsTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

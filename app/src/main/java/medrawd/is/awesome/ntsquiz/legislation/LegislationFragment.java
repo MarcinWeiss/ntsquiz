@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import medrawd.is.awesome.ntsquiz.R;
 
 public class LegislationFragment extends Fragment {
     private static final String ARG_NAME = "name";
+    private static final String TAG = LegislationFragment.class.getSimpleName();
 
     private String name;
     private RecyclerView recyclerView;
@@ -53,10 +55,6 @@ public class LegislationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_legislation, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.listView);
-        List<String> paragraphs = new ArrayList<>();
-        for (Map.Entry<String, Document> entry : Document.documents.entrySet()) {
-            paragraphs.add(entry.getValue().getParagraph());
-        }
         recyclerView.setAdapter(new LegislationRecyclerAdapter(name));
 
         fastScroller = (FastScroller) view.findViewById(R.id.fastscroll);

@@ -8,7 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -61,6 +64,21 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(null != getIntent()){
+            Intent intent = getIntent();
+            if(intent.hasExtra("action")) {
+                switch (intent.getStringExtra("action")) {
+                    case "updateData":
+                        ((NtsQuizApplication)getApplication()).setQuestionsLoaded(false);
+                        setLastUpdateTime(0);
+                        SharedPreferences prefs = getSharedPreferences(MainActivity.ALL_QUESTIONS_PREFS_NAME, MODE_PRIVATE);
+                        prefs.edit().putInt(MainActivity.START_INDEX_PREF_NAME, 0).commit();
+                        break;
+                }
+            }
+        }
+
         setContentView(R.layout.activity_loading);
 
         ImageView coin = (ImageView) findViewById(R.id.logo_coin);
@@ -137,7 +155,7 @@ public class LoadingActivity extends AppCompatActivity {
             registerReceiver(mReceiver, filter);
             mReceiverRegistered = true;
 
-            if (getLastUpdateTime() + MILIS_IN_DAY < new Date().getTime()) {
+            if (shallLookForUpdates()) {
                 mAuth = FirebaseAuth.getInstance();
                 mAuth.signInAnonymously()
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -178,8 +196,36 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     private void updateLastUpdateTime() {
+        setLastUpdateTime(new Date().getTime());
+    }
+
+    private void setLastUpdateTime(long time) {
         SharedPreferences.Editor editor = getSharedPreferences(UPDATE_PREFS, MODE_PRIVATE).edit();
-        editor.putLong(LAST_UPDATE, new Date().getTime());
+        editor.putLong(LAST_UPDATE, time);
         editor.commit();
+    }
+
+    private boolean isWifiConnected(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return wifiInfo.isConnected();
+    }
+
+    private boolean shallUpdateOnlyIfWifiOn() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPref.getBoolean("only_wifi_update_pref", false);
+    }
+
+    private long getMinTimeBetweenUpdates() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPref.getLong("timebe_between_updates_pref", MILIS_IN_DAY);
+    }
+
+    private boolean isFirstStart() {
+        return getLastUpdateTime() == 0;
+    }
+
+    private boolean shallLookForUpdates() {
+        return isFirstStart() || ((!shallUpdateOnlyIfWifiOn() || isWifiConnected()) && getLastUpdateTime() + getMinTimeBetweenUpdates() < new Date().getTime());
     }
 }
