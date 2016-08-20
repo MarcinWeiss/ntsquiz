@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "190141796850",
+    "firebase_url": "https://nts-quiz-1129c.firebaseio.com",
+    "project_id": "nts-quiz-1129c",
+    "storage_bucket": "nts-quiz-1129c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190141796850:android:3e157050b6a0cf15",
+        "android_client_info": {
+          "package_name": "medrawd.is.awesome.ntsquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190141796850-btc0p3nijknkorvoetasj8dafm1t80td.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXM2CIeXFCVobpyhPSQjg2Gtu5ELDBsNc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
