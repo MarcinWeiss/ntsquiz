@@ -7,10 +7,14 @@ android {
         applicationId "medrawd.is.awesome.ntsquiz"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 5
-        versionName "1.0.5"
+        versionCode 6
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+    }
+    productFlavors {
+        develop
+        normal
     }
     buildTypes {
         release {
@@ -24,11 +28,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
     compile 'com.android.support:support-v4:24.1.1'
@@ -40,6 +43,9 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.android.support:support-vector-drawable:24.1.1'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
 }
 
 apply plugin: 'com.google.gms.google-services'
