@@ -267,7 +267,7 @@ public class QuestionFragment extends Fragment implements GestureOverlayView.OnG
 
         mEndButton = (Button) view.findViewById(R.id.end_button);
 
-        if (mQuestionDisplayIndex == mQuestionsNumber) {
+        if (mQuestionDisplayIndex == mQuestionsNumber && mIsTest) {
             mEndButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -279,7 +279,7 @@ public class QuestionFragment extends Fragment implements GestureOverlayView.OnG
         }
 
         mHintButton = (ImageButton) view.findViewById(R.id.helpButton);
-        mHintButton.setOnClickListener(new ShowLegislationPopupOnClick(getContext(), mQuestion.getJustification()));
+        mHintButton.setOnClickListener(new ShowLegislationPopupOnClick(getContext(), mQuestion.getJustifications()));
         return view;
     }
 

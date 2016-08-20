@@ -20,17 +20,18 @@ public class Question {
     public static final String TAG = Question.class.getSimpleName();
     public static final String QUESTIONS_FILENAME = "pytania.tsv";
     public static List<Question> questions = new ArrayList<>();
+    private static Pattern simpleJustification = Pattern.compile("^(.+):.+");
     private static Pattern documentNamePattern = Pattern.compile("^(.+) \\-.*$");
     private static Pattern articleNamePattern = Pattern.compile("^.*Art\\. (\\d+\\w*).*$");
     private static Pattern chapterNamePattern = Pattern.compile("^.*rozdz\\. (\\d+\\w*).*$");
     private static Pattern paragraphNamePattern = Pattern.compile("^.*§ (\\d+\\w*).*$");
-    private static Pattern pointNamePattern = Pattern.compile("^.*ust. (\\d+).*$");
-    private static Pattern subpointNamePattern = Pattern.compile("^.*pkt (\\d+).*$");
+    private static Pattern pointNamePattern = Pattern.compile("^.*ust\\. (\\d+).*$");
+    private static Pattern subpointNamePattern = Pattern.compile("^.*pkt\\. (\\d+).*$");
 
     String question;
     String[] answers;
     Integer correctAnswer;
-    String[] justification;
+    List<String[]> justifications = new ArrayList<>();
 
     public Question(String question, String[] answers, int correctAnswer, String justification) {
         this.question = question;
@@ -38,43 +39,60 @@ public class Question {
         this.correctAnswer = correctAnswer;
         Log.i(TAG, question);
 
-        Matcher documentNameMatcher = documentNamePattern.matcher(justification);
-        Matcher articleNameMatcher = articleNamePattern.matcher(justification);
-        Matcher chapterNameMatcher = chapterNamePattern.matcher(justification);
-        Matcher paragraphNameMatcher = paragraphNamePattern.matcher(justification);
-        Matcher pointNameMatcher = pointNamePattern.matcher(justification);
-        Matcher subpointNameMatcher = subpointNamePattern.matcher(justification);
-
-        List<String> justificationAddress = new ArrayList<>();
-        if (documentNameMatcher.matches()) {
-            justificationAddress.add(documentNameMatcher.group(1));
-        } else {
-            throw new RuntimeException("justification error no document name " + justification);
+        String[] justifications = justification.split("; ");
+        for(String justificationRaw : justifications){
+            parseJustification(justificationRaw);
         }
-        if (articleNameMatcher.matches()) {
-            justificationAddress.add(articleNameMatcher.group(1));
+        questions.add(this);
+    }
+
+    public void parseJustification(String justificationRaw){
+        Log.d(TAG, justificationRaw);
+        Matcher simpleJustificationMatcher = simpleJustification.matcher(justificationRaw);
+        if(simpleJustificationMatcher.matches()){
+            Document.documents.put(justificationRaw, new Document(""));
+            String[] justification = {justificationRaw};
+            this.justifications.add(justification);
         } else {
-            if (chapterNameMatcher.matches()) {
-                justificationAddress.add(chapterNameMatcher.group(1));
+            Matcher documentNameMatcher = documentNamePattern.matcher(justificationRaw);
+            Matcher articleNameMatcher = articleNamePattern.matcher(justificationRaw);
+            Matcher chapterNameMatcher = chapterNamePattern.matcher(justificationRaw);
+            Matcher paragraphNameMatcher = paragraphNamePattern.matcher(justificationRaw);
+            Matcher pointNameMatcher = pointNamePattern.matcher(justificationRaw);
+            Matcher subpointNameMatcher = subpointNamePattern.matcher(justificationRaw);
+
+            List<String> justificationAddress = new ArrayList<>();
+            if (documentNameMatcher.matches()) {
+                justificationAddress.add(documentNameMatcher.group(1));
             } else {
-                if (paragraphNameMatcher.matches()) {
-                    justificationAddress.add(paragraphNameMatcher.group(1));
+                throw new RuntimeException("justification error no document name " + justificationRaw);
+            }
+            if (articleNameMatcher.matches()) {
+                justificationAddress.add(articleNameMatcher.group(1));
+            } else {
+                if (chapterNameMatcher.matches()) {
+                    justificationAddress.add(chapterNameMatcher.group(1));
+                } else {
+                    if (paragraphNameMatcher.matches()) {
+                        justificationAddress.add(paragraphNameMatcher.group(1));
+                    }
                 }
             }
-        }
-        if (pointNameMatcher.matches()) {
-            justificationAddress.add(pointNameMatcher.group(1));
-        }
-        if (subpointNameMatcher.matches()) {
-            justificationAddress.add(subpointNameMatcher.group(1));
-        }
+            if (pointNameMatcher.matches()) {
+                justificationAddress.add(pointNameMatcher.group(1));
+            }
+            if (subpointNameMatcher.matches()) {
+                justificationAddress.add(subpointNameMatcher.group(1));
+            }
 
-        this.justification = justificationAddress.toArray(new String[justificationAddress.size()]);
-        questions.add(this);
-        Log.d(TAG, Arrays.toString(this.justification));
-        Log.d(TAG, justification);
-        String[] address = Arrays.copyOfRange(this.justification, 1, this.justification.length);
-        Log.d(TAG, Document.documents.get(this.justification[0]).getParagraph(address));
+            Log.d(TAG, justificationAddress.toString());
+            String[] justification = justificationAddress.toArray(new String[justificationAddress.size()]);
+            this.justifications.add(justification);
+            Log.d(TAG, Arrays.toString(justification));
+            Log.d(TAG, justificationRaw);
+            String[] address = Arrays.copyOfRange(justification, 1, justification.length);
+            Log.d(TAG, Document.documents.get(justification[0]).getParagraph(address));
+        }
     }
 
     public static List<Question> loadQuestions(Context context) throws IOException {
@@ -98,6 +116,7 @@ public class Question {
             }
 
             if (correctAnswer != null) {
+                Log.i(TAG, Arrays.toString(split));
                 new Question(split[0], Arrays.copyOfRange(split, 1, 4), correctAnswer, split[5]);
             }
             line = reader.readLine();
@@ -129,11 +148,11 @@ public class Question {
         this.correctAnswer = correctAnswer;
     }
 
-    public String[] getJustification() {
-        return justification;
+    public List<String[]> getJustifications() {
+        return justifications;
     }
 
-    public void setJustification(String[] justification) {
-        this.justification = justification;
+    public void setJustifications(List<String[]> justifications) {
+        this.justifications = justifications;
     }
 }

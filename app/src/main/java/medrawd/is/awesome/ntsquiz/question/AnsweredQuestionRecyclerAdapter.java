@@ -59,7 +59,7 @@ public class AnsweredQuestionRecyclerAdapter extends RecyclerView.Adapter<Answer
         }
         holder.correctAnswer.setText(question.getAnswers()[question.getCorrectAnswer()]);
 
-        holder.hintButton.setOnClickListener(new ShowLegislationPopupOnClick(mContext, question.getJustification()));
+        holder.hintButton.setOnClickListener(new ShowLegislationPopupOnClick(mContext, question.getJustifications()));
     }
 
     @Override
