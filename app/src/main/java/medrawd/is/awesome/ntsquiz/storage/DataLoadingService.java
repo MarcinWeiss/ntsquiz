@@ -28,12 +28,11 @@ import static medrawd.is.awesome.ntsquiz.legislation.Document.WZORCOWY_REGULAMIN
 import static medrawd.is.awesome.ntsquiz.question.Question.QUESTIONS_FILENAME;
 
 public class DataLoadingService extends IntentService {
-    private static final String TAG = DataLoadingService.class.getSimpleName();
-
-    private static final String ACTION_LOAD_DATA = "medrawd.is.awesome.ntsquiz.storage.action.LOAD_DATA";
     public static final String GOOGLE_URL = "http://www.google.com";
     public static final int CONNECT_TIMEOUT = 5000;
     public static final int HTTP_RESPONSE_OK = 200;
+    private static final String TAG = DataLoadingService.class.getSimpleName();
+    private static final String ACTION_LOAD_DATA = "medrawd.is.awesome.ntsquiz.storage.action.LOAD_DATA";
 
     public DataLoadingService() {
         super("DataLoadingService");
@@ -50,7 +49,7 @@ public class DataLoadingService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_LOAD_DATA.equals(action)) {
-                if(hasActiveInternetConnection()) {
+                if (hasActiveInternetConnection()) {
                     loadData();
                 }
             }

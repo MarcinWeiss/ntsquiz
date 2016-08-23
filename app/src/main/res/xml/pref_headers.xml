@@ -14,5 +14,5 @@
 
     <header
         android:fragment="medrawd.is.awesome.ntsquiz.SettingsActivity$UpdateNowPreferenceFragment"
-        android:title="@string/check_for_updates_preference"/>
+        android:title="@string/check_for_updates_preference" />
 </preference-headers>

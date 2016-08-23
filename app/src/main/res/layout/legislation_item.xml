@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:contentPadding="12dp"
+    android:layout_margin="4dp"
     app:cardElevation="3dp"
-    android:layout_margin="4dp">
+    app:contentPadding="12dp">
 
     <TextView
+        android:id="@+id/paragraph"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/paragraph"
-        tools:text="asdasdasdasdasdasdasd"/>
+        tools:text="asdasdasdasdasdasdasd" />
 </android.support.v7.widget.CardView>

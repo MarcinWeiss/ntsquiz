@@ -1,23 +1,13 @@
 package medrawd.is.awesome.ntsquiz.legislation;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.futuremind.recyclerviewfastscroll.FastScroller;
-import com.futuremind.recyclerviewfastscroll.RecyclerViewScrollListener;
-import com.futuremind.recyclerviewfastscroll.viewprovider.ScrollerViewProvider;
-import com.futuremind.recyclerviewfastscroll.viewprovider.ViewBehavior;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import medrawd.is.awesome.ntsquiz.R;
 

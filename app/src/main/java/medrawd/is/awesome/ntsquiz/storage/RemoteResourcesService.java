@@ -31,7 +31,6 @@ public class RemoteResourcesService extends IntentService {
     private static final String ACTION_DOWNLOAD_RESOURCES = "medrawd.is.awesome.ntsquiz.storage.action.DOWNLOAD_RESOURCES";
     private static final String ACTION_DOWNLOAD_RESOURCE = "medrawd.is.awesome.ntsquiz.storage.action.DOWNLOAD_RESOURCE";
     private static List<String> filesNames;
-    ;
     private static int failedAttempts = 0;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 

@@ -21,7 +21,7 @@
         <item name="android:colorForeground">@color/foreground_material_dark</item>
     </style>
 
-    <style name="NtsTheme.PopupOverlay" parent="NtsTheme"/>
+    <style name="NtsTheme.PopupOverlay" parent="NtsTheme" />
 
     <style name="FastScrollerBubble" parent="@android:style/TextAppearance">
         <item name="android:textSize">24sp</item>

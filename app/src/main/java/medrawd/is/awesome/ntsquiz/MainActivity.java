@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity
         return generated;
     }
 
-    private boolean shouldOpenMenuOnStart(){
+    private boolean shouldOpenMenuOnStart() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPref.getBoolean("start_with_menu_open", true);
     }

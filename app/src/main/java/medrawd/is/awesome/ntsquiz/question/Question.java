@@ -40,16 +40,45 @@ public class Question {
         Log.i(TAG, question);
 
         String[] justifications = justification.split("; ");
-        for(String justificationRaw : justifications){
+        for (String justificationRaw : justifications) {
             parseJustification(justificationRaw);
         }
         questions.add(this);
     }
 
-    public void parseJustification(String justificationRaw){
+    public static List<Question> loadQuestions(Context context) throws IOException {
+        Log.d(TAG, "loadQuestions");
+        questions.clear();
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(QUESTIONS_FILENAME));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
+
+        String line = reader.readLine();
+        while (line != null) {
+            String[] split = line.split("\t", -1);
+            String correctAnswerString = split[4];
+            Integer correctAnswer = null;
+
+            if (correctAnswerString.equals("A")) {
+                correctAnswer = 0;
+            } else if (correctAnswerString.equals("B")) {
+                correctAnswer = 1;
+            } else if (correctAnswerString.equals("C")) {
+                correctAnswer = 2;
+            }
+
+            if (correctAnswer != null) {
+                Log.i(TAG, Arrays.toString(split));
+                new Question(split[0], Arrays.copyOfRange(split, 1, 4), correctAnswer, split[5]);
+            }
+            line = reader.readLine();
+        }
+        return questions;
+    }
+
+    public void parseJustification(String justificationRaw) {
         Log.d(TAG, justificationRaw);
         Matcher simpleJustificationMatcher = simpleJustification.matcher(justificationRaw);
-        if(simpleJustificationMatcher.matches()){
+        if (simpleJustificationMatcher.matches()) {
             Document.documents.put(justificationRaw, new Document(""));
             String[] justification = {justificationRaw};
             this.justifications.add(justification);
@@ -93,35 +122,6 @@ public class Question {
             String[] address = Arrays.copyOfRange(justification, 1, justification.length);
             Log.d(TAG, Document.documents.get(justification[0]).getParagraph(address));
         }
-    }
-
-    public static List<Question> loadQuestions(Context context) throws IOException {
-        Log.d(TAG, "loadQuestions");
-        questions.clear();
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(context.openFileInput(QUESTIONS_FILENAME));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream, Charset.forName("utf8")));
-
-        String line = reader.readLine();
-        while (line != null) {
-            String[] split = line.split("\t", -1);
-            String correctAnswerString = split[4];
-            Integer correctAnswer = null;
-
-            if (correctAnswerString.equals("A")) {
-                correctAnswer = 0;
-            } else if (correctAnswerString.equals("B")) {
-                correctAnswer = 1;
-            } else if (correctAnswerString.equals("C")) {
-                correctAnswer = 2;
-            }
-
-            if (correctAnswer != null) {
-                Log.i(TAG, Arrays.toString(split));
-                new Question(split[0], Arrays.copyOfRange(split, 1, 4), correctAnswer, split[5]);
-            }
-            line = reader.readLine();
-        }
-        return questions;
     }
 
     public String getQuestion() {

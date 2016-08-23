@@ -26,15 +26,15 @@ public class ShowLegislationPopupOnClick implements View.OnClickListener {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         String message = "";
-        if(legislationAddresses.size() == 1) {
+        if (legislationAddresses.size() == 1) {
             // set title
             alertDialogBuilder.setTitle("Powiązany przepis");
             String[] legislationAddress = legislationAddresses.get(0);
             message = prepareLegislationMessage(legislationAddress);
-        } else if (legislationAddresses.size() > 1){
+        } else if (legislationAddresses.size() > 1) {
             alertDialogBuilder.setTitle("Powiązane przepisu");
             StringBuilder messageBuilder = new StringBuilder();
-            for(String[] legislationAddress : legislationAddresses){
+            for (String[] legislationAddress : legislationAddresses) {
                 messageBuilder.append(prepareLegislationMessage(legislationAddress));
                 messageBuilder.append("<br>");
             }

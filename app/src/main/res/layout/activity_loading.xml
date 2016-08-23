@@ -35,13 +35,13 @@
         android:id="@+id/logo_coin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginRight="48dp"
-        android:adjustViewBounds="true"
-        android:cropToPadding="false"
-        android:layout_marginLeft="48dp"
-        app:srcCompat="@drawable/ic_nts_logo_coin"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:scaleType="centerInside" />
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginTop="48dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/ic_nts_logo_coin" />
 </RelativeLayout>

@@ -9,15 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/legislation_item"/>
+        tools:listitem="@layout/legislation_item" />
 
     <com.futuremind.recyclerviewfastscroll.FastScroller
         android:id="@+id/fastscroll"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        app:fastscroll__handleColor="@color/colorAccent"
+        android:orientation="vertical"
         app:fastscroll__bubbleColor="@color/colorAccent"
-        app:fastscroll__bubbleTextAppearance="@style/FastScrollerBubble"/>
+        app:fastscroll__bubbleTextAppearance="@style/FastScrollerBubble"
+        app:fastscroll__handleColor="@color/colorAccent" />
 </RelativeLayout>

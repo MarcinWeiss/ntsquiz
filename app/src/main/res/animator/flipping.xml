@@ -4,26 +4,26 @@
     android:ordering="together">
     <objectAnimator
         android:duration="750"
+        android:interpolator="@android:anim/linear_interpolator"
         android:propertyName="scaleX"
         android:repeatCount="-1"
         android:repeatMode="reverse"
-        android:interpolator="@android:anim/linear_interpolator"
         android:valueFrom="1"
-        android:valueTo="0.76"/>
+        android:valueTo="0.76" />
     <objectAnimator
         android:duration="750"
+        android:interpolator="@android:anim/linear_interpolator"
         android:propertyName="scaleY"
         android:repeatCount="-1"
         android:repeatMode="reverse"
-        android:interpolator="@android:anim/linear_interpolator"
         android:valueFrom="1"
-        android:valueTo="0.76"/>
+        android:valueTo="0.76" />
     <objectAnimator
         android:duration="3000"
+        android:interpolator="@android:anim/linear_interpolator"
         android:propertyName="rotationY"
         android:repeatCount="-1"
-        android:interpolator="@android:anim/linear_interpolator"
         android:repeatMode="restart"
         android:valueFrom="0"
-        android:valueTo="360"/>
+        android:valueTo="360" />
 </set>

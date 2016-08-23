@@ -60,10 +60,19 @@ public class LoadingActivity extends AppCompatActivity {
             ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME, ROZPORZADZENIE_EGZAMIN_FILENAME,
             KODEKS_KARNY_FILENAME, ROZPORZĄDZENIE_NOSZENIE_FILENAME,
             ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME, WZORCOWY_REGULAMIN_STRZELNIC_FILENAME, QUESTIONS_FILENAME};
+    private IntentFilter mFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFilter = new IntentFilter();
+        mFilter.addAction(ACTION_LOADING_FINISHED);
+        mFilter.addAction(ACTION_DOWNLOADING_FINISHED);
+        mFilter.addAction(ACTION_LOADING_UPDATE);
+        mFilter.addAction(ACTION_DOWNLOADING_UPDATE);
+        mFilter.addAction(ACTION_LOADING_FAILED);
+        mFilter.addAction(ACTION_INTERNET_CONNECTION_FAILED);
 
         PreferenceManager.setDefaultValues(this, R.xml.pref_data_updates, true);
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, true);
@@ -102,7 +111,7 @@ public class LoadingActivity extends AppCompatActivity {
                     Log.d(TAG, "action downloading finished");
                     updateLastUpdateTime();
                     loadingDetails.setText(R.string.downloading_finished_message);
-                    DataLoadingService.startActionLoadData(getApplicationContext());
+                    startLoadingData();
                 } else if (intent.getAction().equals(ACTION_LOADING_FINISHED)) {
                     Log.d(TAG, "action loading finished");
                     ((NtsQuizApplication) getApplication()).setQuestionsLoaded(true);
@@ -127,7 +136,7 @@ public class LoadingActivity extends AppCompatActivity {
                             });
                     android.app.AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                } else if (intent.getAction().equals(ACTION_INTERNET_CONNECTION_FAILED)){
+                } else if (intent.getAction().equals(ACTION_INTERNET_CONNECTION_FAILED)) {
                     Log.d(TAG, "no internet connection");
                     String message = getString(R.string.file_no_internet_connection_popup_message);
                     loadingDetails.setText(message);
@@ -164,34 +173,13 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!((NtsQuizApplication) getApplication()).areQuestionsLoaded()) {
+        if (doQuestionsNeedLoading()) {
             Log.d(TAG, "last update " + String.valueOf(getLastUpdateTime()));
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(ACTION_LOADING_FINISHED);
-            filter.addAction(ACTION_DOWNLOADING_FINISHED);
-            filter.addAction(ACTION_LOADING_UPDATE);
-            filter.addAction(ACTION_DOWNLOADING_UPDATE);
-            filter.addAction(ACTION_LOADING_FAILED);
-            filter.addAction(ACTION_INTERNET_CONNECTION_FAILED);
-            registerReceiver(mReceiver, filter);
-            mReceiverRegistered = true;
-
-            if (shallLookForUpdates()) {
-                mAuth = FirebaseAuth.getInstance();
-                mAuth.signInAnonymously()
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
-                                if (task.isSuccessful()) {
-                                    RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
-                                } else {
-                                    DataLoadingService.startActionLoadData(getApplicationContext());
-                                }
-                            }
-                        });
+            registerReceiver();
+            if (shouldLookForUpdates()) {
+                signInAndDownloadFiles();
             } else {
-                DataLoadingService.startActionLoadData(getApplicationContext());
+                startLoadingData();
             }
         } else {
             navigateToQuizActivity();
@@ -206,6 +194,36 @@ public class LoadingActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    private void startLoadingData() {
+        DataLoadingService.startActionLoadData(getApplicationContext());
+    }
+
+    private boolean doQuestionsNeedLoading() {
+        return !((NtsQuizApplication) getApplication()).areQuestionsLoaded();
+    }
+
+    private void signInAndDownloadFiles() {
+        mAuth = FirebaseAuth.getInstance();
+        loadingDetails.setText(R.string.connecting_to_firebase_message);
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
+                        if (task.isSuccessful()) {
+                            RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
+                        } else {
+                            startLoadingData();
+                        }
+                    }
+                });
+    }
+
+    private void registerReceiver() {
+        registerReceiver(mReceiver, mFilter);
+        mReceiverRegistered = true;
+    }
+
     private void navigateToQuizActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -216,14 +234,14 @@ public class LoadingActivity extends AppCompatActivity {
         return prefs.getLong(LAST_UPDATE, 0L);
     }
 
-    private void updateLastUpdateTime() {
-        setLastUpdateTime(new Date().getTime());
-    }
-
     private void setLastUpdateTime(long time) {
         SharedPreferences.Editor editor = getSharedPreferences(UPDATE_PREFS, MODE_PRIVATE).edit();
         editor.putLong(LAST_UPDATE, time);
         editor.commit();
+    }
+
+    private void updateLastUpdateTime() {
+        setLastUpdateTime(new Date().getTime());
     }
 
     private boolean isWifiConnected() {
@@ -247,7 +265,7 @@ public class LoadingActivity extends AppCompatActivity {
         return getLastUpdateTime() == 0;
     }
 
-    private boolean shallLookForUpdates() {
+    private boolean shouldLookForUpdates() {
         return isFirstStart() || ((!shallUpdateOnlyIfWifiOn() || isWifiConnected()) && getLastUpdateTime() + getMinTimeBetweenUpdates() < new Date().getTime());
     }
 }

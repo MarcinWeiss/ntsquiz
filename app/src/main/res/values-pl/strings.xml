@@ -37,7 +37,7 @@
     <string name="start_with_menu_open_preference">Uruchom z otwartym menu</string>
     <string name="pref_on">włączone</string>
     <string name="pref_off">wyłączone</string>
-    <string name="file_no_internet_connection_popup_message" >Nieudało się nawiązać połączenia z internetem, włącz dane pakietowe lub podłącz się do WiFi i spróbuj ponownie.</string>
+    <string name="file_no_internet_connection_popup_message">Nieudało się nawiązać połączenia z internetem, włącz dane pakietowe lub podłącz się do WiFi i spróbuj ponownie.</string>
 
 
     <string-array name="pref_time_between_updates_titles">
@@ -50,4 +50,5 @@
     <string name="file_no_internet_connection_popup_title">Brak połączenia z internetem</string>
     <string name="downloading_finished_message">pobieranie danych zakończone</string>
     <string name="loading_finished_message">ładowanie danych zakończone</string>
+    <string name="connecting_to_firebase_message">łączę się z serwerem Firebase</string>
 </resources>

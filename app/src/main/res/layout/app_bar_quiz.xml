@@ -22,9 +22,9 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:paddingTop="48dp"
         android:id="@+id/content_quiz"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingTop="48dp" />
 
 </android.support.design.widget.CoordinatorLayout>
