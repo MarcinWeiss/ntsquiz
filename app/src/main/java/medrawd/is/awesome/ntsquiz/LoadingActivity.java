@@ -45,6 +45,7 @@ public class LoadingActivity extends AppCompatActivity {
     public static final String ACTION_LOADING_UPDATE = "medrawd.is.awesome.ntsquiz.ACTION_LOADING_UPDATE";
     public static final String ACTION_LOADING_FINISHED = "medrawd.is.awesome.ntsquiz.ACTION_LOADING_FINISHED";
     public static final String ACTION_LOADING_FAILED = "medrawd.is.awesome.ntsquiz.ACTION_LOADING_FAILED";
+    public static final String ACTION_INTERNET_CONNECTION_FAILED = "medrawd.is.awesome.ntsquiz.ACTION_INTERNET_CONNECTION_FAILED";
     public static final String EXTRA_STAGE = "medrawd.is.awesome.ntsquiz.EXTRA_STAGE";
     public static final String EXTRA_FILENAME = "medrawd.is.awesome.ntsquiz.EXTRA_FILENAME";
     public static final String UPDATE_PREFS = "updatePrefs";
@@ -64,12 +65,14 @@ public class LoadingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(null != getIntent()){
+        PreferenceManager.setDefaultValues(this, R.xml.pref_data_updates, true);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general, true);
+        if (null != getIntent()) {
             Intent intent = getIntent();
-            if(intent.hasExtra("action")) {
+            if (intent.hasExtra("action")) {
                 switch (intent.getStringExtra("action")) {
                     case "updateData":
-                        ((NtsQuizApplication)getApplication()).setQuestionsLoaded(false);
+                        ((NtsQuizApplication) getApplication()).setQuestionsLoaded(false);
                         setLastUpdateTime(0);
                         SharedPreferences prefs = getSharedPreferences(MainActivity.ALL_QUESTIONS_PREFS_NAME, MODE_PRIVATE);
                         prefs.edit().putInt(MainActivity.START_INDEX_PREF_NAME, 0).commit();
@@ -98,18 +101,22 @@ public class LoadingActivity extends AppCompatActivity {
                 } else if (intent.getAction().equals(ACTION_DOWNLOADING_FINISHED)) {
                     Log.d(TAG, "action downloading finished");
                     updateLastUpdateTime();
+                    loadingDetails.setText(R.string.downloading_finished_message);
                     DataLoadingService.startActionLoadData(getApplicationContext());
                 } else if (intent.getAction().equals(ACTION_LOADING_FINISHED)) {
                     Log.d(TAG, "action loading finished");
                     ((NtsQuizApplication) getApplication()).setQuestionsLoaded(true);
+                    loadingDetails.setText(R.string.loading_finished_message);
                     navigateToQuizActivity();
                 } else if (intent.getAction().equals(ACTION_LOADING_FAILED)) {
                     Log.d(TAG, "action loading failed");
                     String stringExtra = intent.getStringExtra(EXTRA_FILENAME);
+                    String message = getString(R.string.file_download_failure_popup_message, stringExtra);
+                    loadingDetails.setText(message);
                     android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
                     alertDialogBuilder.setTitle(getString(R.string.file_download_failure_popup_title, stringExtra));
                     alertDialogBuilder
-                            .setMessage(getString(R.string.file_download_failure_popup_message, stringExtra))
+                            .setMessage(message)
                             .setCancelable(false)
                             .setPositiveButton(R.string.file_download_failure_popup_positive, new DialogInterface.OnClickListener() {
                                 @Override
@@ -118,11 +125,25 @@ public class LoadingActivity extends AppCompatActivity {
                                     finish();
                                 }
                             });
-
-                    // create alert dialog
                     android.app.AlertDialog alertDialog = alertDialogBuilder.create();
-
-                    // show it
+                    alertDialog.show();
+                } else if (intent.getAction().equals(ACTION_INTERNET_CONNECTION_FAILED)){
+                    Log.d(TAG, "no internet connection");
+                    String message = getString(R.string.file_no_internet_connection_popup_message);
+                    loadingDetails.setText(message);
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+                    alertDialogBuilder.setTitle(getString(R.string.file_no_internet_connection_popup_title));
+                    alertDialogBuilder
+                            .setMessage(message)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.file_download_failure_popup_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                    finish();
+                                }
+                            });
+                    android.app.AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }
             }
@@ -151,6 +172,7 @@ public class LoadingActivity extends AppCompatActivity {
             filter.addAction(ACTION_LOADING_UPDATE);
             filter.addAction(ACTION_DOWNLOADING_UPDATE);
             filter.addAction(ACTION_LOADING_FAILED);
+            filter.addAction(ACTION_INTERNET_CONNECTION_FAILED);
             registerReceiver(mReceiver, filter);
             mReceiverRegistered = true;
 
@@ -204,11 +226,12 @@ public class LoadingActivity extends AppCompatActivity {
         editor.commit();
     }
 
-    private boolean isWifiConnected(){
+    private boolean isWifiConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return wifiInfo.isConnected();
     }
+
 
     private boolean shallUpdateOnlyIfWifiOn() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -217,7 +240,7 @@ public class LoadingActivity extends AppCompatActivity {
 
     private long getMinTimeBetweenUpdates() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPref.getLong("timebe_between_updates_pref", MILIS_IN_DAY);
+        return Long.parseLong(sharedPref.getString("timebe_between_updates_pref", String.valueOf(MILIS_IN_DAY)));
     }
 
     private boolean isFirstStart() {

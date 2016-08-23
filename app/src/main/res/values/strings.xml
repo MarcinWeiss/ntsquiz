@@ -67,5 +67,9 @@
     <string name="update_on_startup_preference">Update data on startup</string>
     <string name="pref_off">off</string>
     <string name="pref_on">on</string>
+    <string name="file_no_internet_connection_popup_message">Could not establish internet connection, enable data transfer or connect to the WiFi and try again</string>
+    <string name="file_no_internet_connection_popup_title">No internet connection</string>
+    <string name="downloading_finished_message">downloading finished</string>
+    <string name="loading_finished_message">loading finished</string>
 
 </resources>
