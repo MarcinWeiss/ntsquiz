@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,15 +47,30 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final String ALL_QUESTIONS_PREFS_NAME = "allquestionsprefs";
     public static final String START_INDEX_PREF_NAME = "startIndex";
+    public static final String SELECTED_INDICES = "selectedIndices";
+    public static final String ANSWERS = "answers";
+    public static final String M_FRAGMENT = "mFragment";
+    public static final String IS_QUIZ = "isQuiz";
+    public static final String QUESTIONS_INDEX = "questionsIndex";
     private boolean isQuiz;
     private int questionsIndex = 0;
     private List<Integer> selectedIndices = new ArrayList<>();
     private Map<Integer, Integer> answers = new LinkedHashMap<>();
+    private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(null != savedInstanceState) {
+            selectedIndices = savedInstanceState.getIntegerArrayList(SELECTED_INDICES);
+            answers = (Map<Integer, Integer>) savedInstanceState.getSerializable(ANSWERS);
+            isQuiz = savedInstanceState.getBoolean(IS_QUIZ);
+            questionsIndex = savedInstanceState.getInt(QUESTIONS_INDEX);
+            mFragment = getSupportFragmentManager().getFragment(savedInstanceState, M_FRAGMENT);
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -62,7 +79,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
 
-        if (shouldOpenMenuOnStart()) {
+        if (shouldOpenMenuOnStart() && null == savedInstanceState) {
             drawer.openDrawer(Gravity.LEFT);
         }
 
@@ -71,6 +88,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.nav_questions);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -115,8 +133,22 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (null == getSupportFragmentManager().findFragmentById(R.id.content_quiz)) {
-            navigateToAllQuestions();
+            if(null != mFragment){
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_quiz, mFragment);
+            } else {
+                navigateToAllQuestions();
+            }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList(SELECTED_INDICES, (ArrayList<Integer>) selectedIndices);
+        outState.putSerializable(ANSWERS, (Serializable) answers);
+        outState.putBoolean(IS_QUIZ, isQuiz);
+        outState.putInt(QUESTIONS_INDEX, questionsIndex);
+        getSupportFragmentManager().putFragment(outState, M_FRAGMENT, getSupportFragmentManager().findFragmentById(R.id.content_quiz));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

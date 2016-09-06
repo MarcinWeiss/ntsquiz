@@ -25,7 +25,7 @@ import static medrawd.is.awesome.ntsquiz.LoadingActivity.ACTION_DOWNLOADING_UPDA
 import static medrawd.is.awesome.ntsquiz.LoadingActivity.EXTRA_STAGE;
 
 public class RemoteResourcesService extends IntentService {
-    public static final int MAX_FAILED_ATTEMPTS = 3;
+    public static final int MAX_FAILED_ATTEMPTS = 5;
     public static final String EXTRA_FILES_NAMES = "medrawd.is.awesome.ntsquiz.storage.action.FILES_NAMES";
     private static final String TAG = RemoteResourcesService.class.getSimpleName();
     private static final String ACTION_DOWNLOAD_RESOURCES = "medrawd.is.awesome.ntsquiz.storage.action.DOWNLOAD_RESOURCES";
@@ -55,12 +55,14 @@ public class RemoteResourcesService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_DOWNLOAD_RESOURCES.equals(action)) {
-                filesNames = new ArrayList<>(Arrays.asList(intent.getStringArrayExtra(EXTRA_FILES_NAMES)));
-                broadcastDownloadingUpdate("sprawdzanie plików");
-                downladFirst();
-            } else if (ACTION_DOWNLOAD_RESOURCE.equals(action)) {
-                downloadFileIfNeeded();
+            if (null != action) {
+                if (ACTION_DOWNLOAD_RESOURCES.equals(action)) {
+                    filesNames = new ArrayList<>(Arrays.asList(intent.getStringArrayExtra(EXTRA_FILES_NAMES)));
+                    broadcastDownloadingUpdate("sprawdzanie plików");
+                    downladFirst();
+                } else if (ACTION_DOWNLOAD_RESOURCE.equals(action)) {
+                    downloadFileIfNeeded();
+                }
             }
         }
     }
@@ -93,8 +95,12 @@ public class RemoteResourcesService extends IntentService {
     }
 
     private void downloadNext() {
-        filesNames.remove(0);
-        downladFirst();
+        if (filesNames.size() > 0) {
+            filesNames.remove(0);
+            downladFirst();
+        } else {
+            broadcastDownloadingFinished();
+        }
     }
 
     private boolean fileIsOutdated(StorageMetadata storageMetadata, String filename) {

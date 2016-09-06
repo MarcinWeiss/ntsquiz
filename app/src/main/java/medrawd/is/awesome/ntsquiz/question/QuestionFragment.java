@@ -86,7 +86,17 @@ public class QuestionFragment extends Fragment implements GestureOverlayView.OnG
             if (getArguments().containsKey(SELECTED_ANSWER)) {
                 mSelectedAnswer = Integer.valueOf(getArguments().getInt(SELECTED_ANSWER));
             }
+        } else {
+            mQuestionIndex = savedInstanceState.getInt(QUESTION_INDEX);
+            mQuestionDisplayIndex = savedInstanceState.getInt(QUESTION_DISPLAY_INDEX);
+            mQuestionsNumber = savedInstanceState.getInt(QUESTIONS_NUMBER);
+            mQuestion = Question.questions.get(Integer.valueOf(mQuestionIndex));
+            mIsTest = savedInstanceState.getBoolean(TEST);
+            if (savedInstanceState.containsKey(SELECTED_ANSWER)) {
+                mSelectedAnswer = Integer.valueOf(savedInstanceState.getInt(SELECTED_ANSWER));
+            }
         }
+
     }
 
     @Override
@@ -302,6 +312,18 @@ public class QuestionFragment extends Fragment implements GestureOverlayView.OnG
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(QUESTION_INDEX, mQuestionIndex);
+        outState.putInt(QUESTION_DISPLAY_INDEX, mQuestionDisplayIndex);
+        outState.putInt(QUESTIONS_NUMBER, mQuestionsNumber);
+        outState.putBoolean(TEST, mIsTest);
+        if(null != mSelectedAnswer) {
+            outState.putInt(SELECTED_ANSWER, mSelectedAnswer);
+        }
     }
 
     @Override

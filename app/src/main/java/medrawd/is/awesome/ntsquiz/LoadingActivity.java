@@ -2,6 +2,7 @@ package medrawd.is.awesome.ntsquiz;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,8 +21,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -48,20 +49,20 @@ public class LoadingActivity extends AppCompatActivity {
     public static final String ACTION_INTERNET_CONNECTION_FAILED = "medrawd.is.awesome.ntsquiz.ACTION_INTERNET_CONNECTION_FAILED";
     public static final String EXTRA_STAGE = "medrawd.is.awesome.ntsquiz.EXTRA_STAGE";
     public static final String EXTRA_FILENAME = "medrawd.is.awesome.ntsquiz.EXTRA_FILENAME";
-    public static final String UPDATE_PREFS = "updatePrefs";
-    public static final String LAST_UPDATE = "lastUpdate";
-    public static final int MILIS_IN_DAY = 86400000;
+    private static final String UPDATE_PREFS = "updatePrefs";
+    private static final String LAST_UPDATE = "lastUpdate";
+    private static final int MILIS_IN_DAY = 86400000;
     private static final String TAG = LoadingActivity.class.getSimpleName();
     private TextView loadingDetails;
     private BroadcastReceiver mReceiver;
     private boolean mReceiverRegistered;
-    private FirebaseAuth mAuth;
     private String[] filenames = new String[]{USTAWA_O_BRONI_I_AMUNICJI_FILENAME,
             ROZPORZĄDZENIE_DEPONOWANIE_BRONI_FILENAME, ROZPORZADZENIE_EGZAMIN_FILENAME,
             KODEKS_KARNY_FILENAME, ROZPORZĄDZENIE_NOSZENIE_FILENAME,
             ROZPORZĄDZENIE_PRZEWOŻENIE_FILENAME, WZORCOWY_REGULAMIN_STRZELNIC_FILENAME, QUESTIONS_FILENAME};
     private IntentFilter mFilter;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,8 +162,7 @@ public class LoadingActivity extends AppCompatActivity {
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        View view = super.onCreateView(parent, name, context, attrs);
-        return view;
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     @Override
@@ -203,20 +203,22 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     private void signInAndDownloadFiles() {
-        mAuth = FirebaseAuth.getInstance();
         loadingDetails.setText(R.string.connecting_to_firebase_message);
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
-                        if (task.isSuccessful()) {
-                            RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
-                        } else {
-                            startLoadingData();
-                        }
-                    }
-                });
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                loadingDetails.setText(R.string.connected_to_firebase_message);
+                RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
+            }
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+                loadingDetails.setText(R.string.unable_to_connect_to_firebase_message);
+                startLoadingData();
+            }
+        });
     }
 
     private void registerReceiver() {
@@ -234,6 +236,7 @@ public class LoadingActivity extends AppCompatActivity {
         return prefs.getLong(LAST_UPDATE, 0L);
     }
 
+    @SuppressLint("CommitPrefEdits")
     private void setLastUpdateTime(long time) {
         SharedPreferences.Editor editor = getSharedPreferences(UPDATE_PREFS, MODE_PRIVATE).edit();
         editor.putLong(LAST_UPDATE, time);

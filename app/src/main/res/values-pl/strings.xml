@@ -51,4 +51,6 @@
     <string name="downloading_finished_message">pobieranie danych zakończone</string>
     <string name="loading_finished_message">ładowanie danych zakończone</string>
     <string name="connecting_to_firebase_message">łączę się z serwerem Firebase</string>
+    <string name="connected_to_firebase_message">nawiązano połączenie z serwerem Firebase</string>
+    <string name="unable_to_connect_to_firebase_message">nieudało się nawiązać połączenia z serwerem Firebase</string>
 </resources>

@@ -72,5 +72,7 @@
     <string name="downloading_finished_message">downloading finished</string>
     <string name="loading_finished_message">loading finished</string>
     <string name="connecting_to_firebase_message">connecting to Firebase server</string>
+    <string name="connected_to_firebase_message">connection with Firebase server established</string>
+    <string name="unable_to_connect_to_firebase_message">unable to establish connection with Firebase server</string>
 
 </resources>
