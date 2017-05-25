@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -203,22 +204,36 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     private void signInAndDownloadFiles() {
-        loadingDetails.setText(R.string.connecting_to_firebase_message);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                loadingDetails.setText(R.string.connected_to_firebase_message);
-                RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
-            }
-        }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, e.getLocalizedMessage());
-                loadingDetails.setText(R.string.unable_to_connect_to_firebase_message);
-                startLoadingData();
-            }
-        });
+        if(arePlayServicesInstalled()) {
+            loadingDetails.setText(R.string.connecting_to_firebase_message);
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    loadingDetails.setText(R.string.connected_to_firebase_message);
+                    RemoteResourcesService.startToDownloadResources(getApplicationContext(), filenames);
+                }
+            }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage());
+                    loadingDetails.setText(R.string.unable_to_connect_to_firebase_message);
+                    RemoteResourcesService.unpackBackupsIfNeeded(getApplicationContext(), filenames);
+                    startLoadingData();
+                }
+            });
+        } else {
+            RemoteResourcesService.unpackBackupsIfNeeded(getApplicationContext(), filenames);
+        }
+    }
+
+    private boolean arePlayServicesInstalled(){
+        try {
+            int v = getApplicationContext().getPackageManager().getPackageInfo("com.google.android.gms", 0 ).versionCode;
+            return v>0;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     private void registerReceiver() {

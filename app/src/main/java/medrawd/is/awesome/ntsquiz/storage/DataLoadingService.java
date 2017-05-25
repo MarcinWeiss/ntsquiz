@@ -28,9 +28,6 @@ import static medrawd.is.awesome.ntsquiz.legislation.Document.WZORCOWY_REGULAMIN
 import static medrawd.is.awesome.ntsquiz.question.Question.QUESTIONS_FILENAME;
 
 public class DataLoadingService extends IntentService {
-    public static final String GOOGLE_URL = "http://www.google.com";
-    public static final int CONNECT_TIMEOUT = 5000;
-    public static final int HTTP_RESPONSE_OK = 200;
     private static final String TAG = DataLoadingService.class.getSimpleName();
     private static final String ACTION_LOAD_DATA = "medrawd.is.awesome.ntsquiz.storage.action.LOAD_DATA";
 
@@ -49,27 +46,9 @@ public class DataLoadingService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_LOAD_DATA.equals(action)) {
-                if (hasActiveInternetConnection()) {
-                    loadData();
-                }
+                loadData();
             }
         }
-    }
-
-    public boolean hasActiveInternetConnection() {
-        broadcastLoadingUpdate("sprawdzam połączenie z internetem");
-        try {
-            HttpURLConnection urlc = (HttpURLConnection) (new URL(GOOGLE_URL).openConnection());
-            urlc.setRequestProperty("User-Agent", "Test");
-            urlc.setRequestProperty("Connection", "close");
-            urlc.setConnectTimeout(CONNECT_TIMEOUT);
-            urlc.connect();
-            return (urlc.getResponseCode() == HTTP_RESPONSE_OK);
-        } catch (IOException e) {
-            broadcastNoInternetConnection();
-            Log.e(TAG, "Error checking internet connection", e);
-        }
-        return false;
     }
 
     private void loadData() {
@@ -153,11 +132,6 @@ public class DataLoadingService extends IntentService {
     private void broadcastLoadingFailed(String fileName) {
         Intent failedIntent = new Intent(ACTION_LOADING_FAILED);
         failedIntent.putExtra(EXTRA_FILENAME, fileName);
-        sendBroadcast(failedIntent);
-    }
-
-    private void broadcastNoInternetConnection() {
-        Intent failedIntent = new Intent(ACTION_INTERNET_CONNECTION_FAILED);
         sendBroadcast(failedIntent);
     }
 }
